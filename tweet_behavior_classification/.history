@@ -1,0 +1,6 @@
+2016-12-06.20-07-45.test3 du -h ./
+2017-03-23.16-10-19.test2 du -h ./
+2017-03-23.16-10-22.test2 ls scripts
+2017-03-23.16-10-26.test2 ls -h -all scripts/
+2017-03-23.16-10-41.test2 less scripts/TODO 
+2017-03-23.16-10-44.test2 du -h ./

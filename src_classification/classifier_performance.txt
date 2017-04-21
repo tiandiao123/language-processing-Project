@@ -1,0 +1,7 @@
+Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
+flu | flu_relevant | majority | None | dev | 0.58418788502 | 0.29209394251 | 0.5 | 0.368706334708 | 1.0
+flu | flu_relevant | majority | None | test | 0.586 | 0.293125397836 | 0.5 | 0.369582664526 | 1.0
+flu | flu_relevant | linear_svm | unigram | test | 0.778 | 0.775146328267 | 0.761642027896 | 0.768334844561 | 0.578455691974
+flu | flu_relevant | linear_svm | unigram | dev | 0.791152913652 | 0.79311709419828991 |0.76581264498929802 | 0.77922575267663419 | 0.59303288156476208
+zika_conspiracy | zika_conspiracy | linear_svm | unigram | test | 0.768 | 0.76700603713 | 0.753888971845 | 0.760390939964 | 0.6611194067
+

@@ -1,0 +1,6 @@
+2016-12-06.20-02-41.test3 ls -h -all
+2016-12-06.20-02-44.test3 du -h ./
+2016-12-06.20-03-05.test3 rm evalMLPClassifiers.e17879*
+2016-12-06.20-03-07.test3 rm evalMLPClassifiers.o17879*
+2016-12-06.20-03-09.test3 pwd
+2016-12-06.20-03-10.test3 du -h 

@@ -1,0 +1,7 @@
+2017-03-19.08-56-29.login2 ls -h -all
+2017-03-19.08-56-39.login2 zcat trust-in-government.json.gz | less
+2017-03-19.09-12-49.login2 python
+2017-03-23.16-14-43.login2 ls -h -all
+2017-03-23.16-15-07.login2 zcat flu.json.gz | less
+2017-03-23.16-15-09.login2 zcat flu.json.gz | wc -l]
+2017-03-23.16-15-11.login2 zcat flu.json.gz | wc -l

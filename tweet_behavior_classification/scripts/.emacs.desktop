@@ -1,0 +1,72 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Apr 14 10:53:43 2016
+;; Desktop file format version 206
+;; Emacs version 23.1.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("b0" "BatchN r" "lr=" "lr = " "lr=" "trainMask" "add_"))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/home/hltcoe/abenton/tweet_behavior_classification/scripts/nn_classification.py"
+  "nn_classification.py"
+  'python-mode
+  '(linum-mode)
+  15708
+  '(1391 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/hltcoe/abenton/tweet_behavior_classification/scripts/evalMLPClassifiers.sh"
+  "evalMLPClassifiers.sh"
+  'sh-mode
+  '(linum-mode)
+  161
+  '(271 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/hltcoe/abenton/tweet_behavior_classification/scripts/batch_classification.py"
+  "batch_classification.py"
+  'python-mode
+  '(linum-mode)
+  2369
+  '(nil nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/hltcoe/abenton/tweet_behavior_classification/scripts/lstm_classification.py"
+  "lstm_classification.py"
+  'python-mode
+  '(linum-mode)
+  687
+  '(nil nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/hltcoe/abenton/tweet_behavior_classification/scripts/evalRNNClassifiers.sh"
+  "evalRNNClassifiers.sh"
+  'sh-mode
+  '(linum-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
