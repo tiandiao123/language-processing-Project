@@ -155,5 +155,3 @@ def handle_zika_conspiracy(path):
 		labels.append(line['label']['zika_conspiracy'])
 	return data,labels
 
-
-

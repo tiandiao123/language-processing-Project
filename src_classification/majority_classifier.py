@@ -92,7 +92,7 @@ def handle_two_classifications(txt,prediction_labels):
     F_1=2*(Recall*Precision)/(Precision+Recall)
     return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc
 
-
+print("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC")
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
 prediction_labels_flu=[]
 for ele in labels_flu:
@@ -212,7 +212,6 @@ prediction_labels_intend=np.array(prediction_labels_intend)
 
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels_intend)
-
 print("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | {} | {} | {} | {} | {}"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
@@ -348,6 +347,31 @@ print("trust-in-government | label_about_vaccine | majority | None | dev | {} | 
 print("trust-in-government | label_about_vaccine | majority | None | test | {} | {} | {} | {} | {}"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
+
+data,label_relevant=handle_vaccine_sentiment("../data/vaccine_sentiment.json.gz")
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_relevant)):
+    if label_relevant[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_relevant[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels)
+
+print("vaccine_sentiment | yes-no | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("vaccine_sentiment | yes-no | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
 

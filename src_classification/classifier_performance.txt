@@ -19,6 +19,8 @@ trust-in-government | label_about_vaccine | majority | None | dev | 0.5779775524
 trust-in-government | label_about_vaccine | majority | None | test | 0.575 | 0.287334913647 | 0.5 | 0.364946236559 | 0.5
 trust-in-government | label_trust_gov | majority | None | dev | 0.926772387053 | 0.463386193526 | 0.5 | 0.480987599807 | 0.5
 trust-in-government | label_trust_gov | majority | None | test | 0.925 | 0.462592202318 | 0.5 | 0.48056923919 | 0.5
+vaccine_sentiment | yes-no | majority | None | dev | 0.730738993711 | 0.365369496855 | 0.5 | 0.422189874529 | 0.5
+vaccine_sentiment | yes-no | majority | None | test | 0.746 | 0.372807017544 | 0.5 | 0.427135678392 | 0.5
 flu | flu_relevant | linear_svm | unigram | test | 0.778 | 0.775146328267 | 0.761642027896 | 0.768334844561 | 0.578455691974
 flu | flu_relevant | linear_svm | unigram | dev | 0.791152913652 | 0.79311709419828991 |0.76581264498929802 | 0.77922575267663419 | 0.59303288156476208
 zika_conspiracy | zika_conspiracy | linear_svm | unigram | test | 0.768 | 0.76700603713 | 0.753888971845 | 0.760390939964 | 0.6611194067
