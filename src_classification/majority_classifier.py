@@ -11,7 +11,8 @@ from sklearn.dummy import DummyClassifier
 import os
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-from process_data import handle_flu_json,handle_flu_risk_perception
+from process_data import handle_flu_json,handle_flu_risk_perception,handle_flu_vaccine_new
+from process_data import handle_health_json,handle_trust_in_gov,handle_vaccine_sentiment,handle_zika_conspiracy
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import roc_auc_score
@@ -121,13 +122,13 @@ handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
 #case 1:
 txt_about_flu=[]
 prediction_labels_about_flu_likelihood=[]
-for ele in label_about_flu_likelihood:
-    if ele=='likely':
+for i in range(len(label_about_flu_likelihood)):
+    if label_about_flu_likelihood[i]=='likely':
         prediction_labels_about_flu_likelihood.append(1)
-        txt_about_flu.append(ele)
-    elif ele=='unlikely':
+        txt_about_flu.append(train_data[i])
+    elif label_about_flu_likelihood[i]=='unlikely':
         prediction_labels_about_flu_likelihood.append(0)
-        txt_about_flu.append(ele)
+        txt_about_flu.append(train_data[i])
 
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flu_likelihood=np.array(prediction_labels_about_flu_likelihood)
@@ -145,13 +146,13 @@ print("flu-risk | label_about_flu_likelihood | majority | None | test | {} | {} 
 #case2:
 txt_about_flu=[]
 prediction_labels_about_flu=[]
-for ele in label_about_flu:
-    if ele=='yes':
+for i in range(len(label_about_flu)):
+    if label_about_flu[i]=='yes':
         prediction_labels_about_flu.append(1)
-        txt_about_flu.append(ele)
-    elif ele=='no':
+        txt_about_flu.append(train_data[i])
+    elif label_about_flu[i]=='no':
         prediction_labels_about_flu.append(0)
-        txt_about_flu.append(ele)
+        txt_about_flu.append(train_data[i])
 
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flu=np.array(prediction_labels_about_flu)
@@ -169,13 +170,13 @@ print("flu-risk | label_about_flu | majority | None | test | {} | {} | {} | {} |
 #case3:
 txt_about_flu=[]
 prediction_labels_about_flushot=[]
-for ele in label_about_fluShot:
-    if ele=='yes':
+for i in range(len(label_about_fluShot)):
+    if label_about_fluShot[i]=='yes':
         prediction_labels_about_flushot.append(1)
-        txt_about_flu.append(ele)
-    elif ele=='no':
+        txt_about_flu.append(train_data[i])
+    elif label_about_fluShot[i]=='no':
         prediction_labels_about_flushot.append(0)
-        txt_about_flu.append(ele)
+        txt_about_flu.append(train_data[i])
 
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flushot=np.array(prediction_labels_about_flushot)
@@ -190,5 +191,58 @@ print("flu-risk | label_about_flushot | majority | None | dev | {} | {} | {} | {
 print("flu-risk | label_about_flushot | majority | None | test | {} | {} | {} | {} | {}"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
+
+
+data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
+    label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
+
+
+txt=[]
+prediction_labels_intend=[]
+for i in range(len(label_flu_vaccine_intent_to_receive)):
+    if label_flu_vaccine_intent_to_receive[i]=='yes':
+        prediction_labels_intend.append(1)
+        txt.append(data[i])
+    elif label_flu_vaccine_intent_to_receive[i]=='no':
+        prediction_labels_intend.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels_intend=np.array(prediction_labels_intend)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels_intend)
+
+print("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+
+txt=[]
+prediction_labels_flu_vaccine_relevant=[]
+for i in range(len(label_flu_vaccine_relevant)):
+    if label_flu_vaccine_relevant[i]=='yes':
+        prediction_labels_flu_vaccine_relevant.append(1)
+        txt.append(data[i])
+    elif label_flu_vaccine_relevant[i]=='no':
+        prediction_labels_flu_vaccine_relevant.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels_flu_vaccine_relevant=np.array(prediction_labels_flu_vaccine_relevant)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels_flu_vaccine_relevant)
+
+print("flu-vaccine | flu_vaccine_relevant | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("flu-vaccine | flu_vaccine_relevant | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 

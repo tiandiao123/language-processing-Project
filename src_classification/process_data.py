@@ -156,20 +156,10 @@ def handle_zika_conspiracy(path):
 	return data,labels
 
 
-train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
-handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
-# pprint(set(label_about_flu))
-# pprint(set(label_about_fluShot))
-pprint(set(label_about_flu_likelihood))
-# pprint(set(label_about_flu_severity))
+# data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
+# 	label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
+# pprint(set(label_flu_vaccine_relevant))
+# pprint(set(label_flu_vaccine_received))
+# pprint(set(label_flu_vaccine_sentiment))
+# pprint(set(label_flu_vaccine_intent_to_receive))
 
-# count=0
-# for i in range(len(label_about_flu)):
-# 	if label_about_flu[i]!='' and label_about_flu[i]!=None:
-# 		count+=1
-
-# pprint(count)
-
-# for ele in train_data:
-# 	pprint(ele)
-# 	time.sleep(1)
