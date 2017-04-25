@@ -156,8 +156,20 @@ def handle_zika_conspiracy(path):
 	return data,labels
 
 
-txt,labels=handle_flu_json('../data/flu.json.gz')
+train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
+handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
+pprint(set(label_about_flu))
+# pprint(set(label_about_fluShot))
+# pprint(set(label_about_flu_likelihood))
+# pprint(set(label_about_flu_severity))
 
-for i in range(len(txt)):
-	print("label :{},and the text is :{}".format(str(i),txt[i]))
+# count=0
+# for i in range(len(label_about_flu)):
+# 	if label_about_flu[i]!='' and label_about_flu[i]!=None:
+# 		count+=1
 
+# pprint(count)
+
+# for ele in train_data:
+# 	pprint(ele)
+# 	time.sleep(1)

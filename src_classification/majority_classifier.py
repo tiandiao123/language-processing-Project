@@ -18,109 +18,125 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
 
 
+def handle_two_classifications(txt,prediction_labels):
+    ##make td-idf matric
+    count_vectorizer = CountVectorizer()
+    count_vectorizer.fit_transform(txt)
+    freq_term_matrix=count_vectorizer.transform(txt)
+
+    tfidf = TfidfTransformer(norm="l2")
+    tfidf.fit(freq_term_matrix)
+
+    tf_idf_matrix = tfidf.transform(freq_term_matrix)
+    data=tf_idf_matrix.todense()
+
+    #split the data into training data and test data
+    X_Kfold,X_test,y_Kfold,y_test=train_test_split(data,prediction_labels,test_size=0.33)
+    kf = KFold(n_splits=4)
 
 
-txt,labels=handle_flu_json("../data/flu.json.gz")
-prediction_labels=[]
-for ele in labels:
-    if ele=='true':
-        prediction_labels.append(1)
-    else:
-        prediction_labels.append(0)
+    print("use svm training flurate(C=1)>>>")
+    start=time.time()
+    #construct SVM model, and compuet dev accuracy, precision, recall, F1 and auc value
+    dev_acc=[]
+    dev_auc=[]
+    dev_precision=[]
+    dev_recall=[]
+    dev_F1=[]
+    clf = DummyClassifier(strategy='most_frequent',random_state=0)
+    i=0
+    for train_index, dev_index in kf.split(X_Kfold):
+        print("the {} iteraion".format(str(i)))
+        X_validation=X_Kfold[dev_index]
+        y_validation=y_Kfold[dev_index]
+        X_train=X_Kfold[train_index]
+        y_train=y_Kfold[train_index]
+        print(len(X_train))
+        print(len(y_train))
+        clf.fit(X_train,y_train)
+        predics=clf.predict(X_validation)
+        predics_prob=clf.predict_proba(X_validation)
+        probs = predics_prob[:,1]
+        dev_auc.append(roc_auc_score(y_validation,probs))
+        num_corrects=np.sum(np.array(predics)==np.array(y_validation))
+        i+=1
+        dev_acc.append(float(num_corrects)/len(y_validation))
+        recall=recall_score(y_validation,predics,average='macro')
+        precision=precision_score(y_validation,predics,average='macro')
+        F_1=2*(recall*precision)/(recall+precision)
+        dev_F1.append(F_1)
+        dev_precision.append(precision)
+        dev_recall.append(recall)
+    end=time.time()
+    print("the training time is {}".format(str(end-start)))
 
-prediction_labels=np.array(prediction_labels)
 
-
-## make tf_idf_matrix
-count_vectorizer = CountVectorizer()
-count_vectorizer.fit_transform(txt)
-freq_term_matrix=count_vectorizer.transform(txt)
-
-tfidf = TfidfTransformer(norm="l2")
-tfidf.fit(freq_term_matrix)
-
-tf_idf_matrix = tfidf.transform(freq_term_matrix)
-data=tf_idf_matrix.todense()
-
-#split the data into training data and test data
-X_Kfold,X_test,y_Kfold,y_test=train_test_split(data,prediction_labels,test_size=0.33)
-kf = KFold(n_splits=4)
-
-
-print("use svm training flurate(C=1)>>>")
-start=time.time()
-#construct SVM model, and compuet dev accuracy, precision, recall, F1 and auc value
-dev_acc=[]
-dev_auc=[]
-dev_precision=[]
-dev_recall=[]
-dev_F1=[]
-clf = DummyClassifier(strategy='most_frequent',random_state=0)
-i=0
-for train_index, dev_index in kf.split(X_Kfold):
-    print("the {} iteraion".format(str(i)))
-    X_validation=X_Kfold[dev_index]
-    y_validation=y_Kfold[dev_index]
-    X_train=X_Kfold[train_index]
-    y_train=y_Kfold[train_index]
-    print(len(X_train))
-    print(len(y_train))
-    clf.fit(X_train,y_train)
-    predics=clf.predict(X_validation)
-    predics_prob=clf.predict_proba(X_validation)
+    print("evaluation test_data......")
+    predics_prob=clf.predict_proba(X_test)
     probs = predics_prob[:,1]
-    #probs=[]
-    #for j in range(len(y_validation)):
-    #	if y_validation[j]==1:
-    #		probs.append(predics_prob[j][1])
-    #	else:
-    #		probs.append(predics_prob[j][0])
-    dev_auc.append(roc_auc_score(y_validation,probs))
-    num_corrects=np.sum(np.array(predics)==np.array(y_validation))
-    i+=1
-    dev_acc.append(float(num_corrects)/len(y_validation))
-    recall=recall_score(y_validation,predics,average='macro')
-    precision=precision_score(y_validation,predics,average='macro')
-    F_1=2*(recall*precision)/(recall+precision)
-    dev_F1.append(F_1)
-    dev_precision.append(precision)
-    dev_recall.append(recall)
-end=time.time()
-print("the training time is {}".format(str(end-start)))
+    auc=roc_auc_score(y_test,probs)
+    predics=[]
+    for i in range(len(predics_prob)):
+        if predics_prob[i][0]>=predics_prob[i][1]:
+            predics.append(0)
+        else:
+            predics.append(1)
+
+
+    num_correct=np.sum(np.array(predics)==y_test)
+    ### compute precison, recall,auc value
+    Recall=recall_score(y_test, predics, average='macro') 
+    Precision= precision_score(y_test, predics, average='macro') 
+    test_accracy="{:.3f}".format(float(num_correct)/len(y_test))
+    F_1=2*(Recall*Precision)/(Precision+Recall)
+    return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc
+
+
+txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
+prediction_labels_flu=[]
+for ele in labels_flu:
+    if ele=='true':
+        prediction_labels_flu.append(1)
+    else:
+        prediction_labels_flu.append(0)
+
+prediction_labels_flu=np.array(prediction_labels_flu)
+
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt_flu,prediction_labels_flu)
+
 print("flu | flu_relevant | majority | None | dev | {} | {} | {} | {} | {}"\
-	.format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),str(np.mean(dev_auc))))
-
-
-
-
-
-
-print("evaluation test_data......")
-predics_prob=clf.predict_proba(X_test)
-probs = predics_prob[:,1]
-# probs=[]
-# for i in range(len(y_test)):
-#     if y_test[i]==1:
-#         probs.append(predics_prob[i][1])
-#     else:
-#         probs.append(predics_prob[i][0])
-
-auc=roc_auc_score(y_test,probs)
-
-predics=[]
-for i in range(len(predics_prob)):
-	if predics_prob[i][0]>=predics_prob[i][1]:
-		predics.append(0)
-	else:
-		predics.append(1)
-
-
-num_correct=np.sum(np.array(predics)==y_test)
-### compute precison, recall,auc value
-Recall=recall_score(y_test, predics, average='macro') 
-Precision= precision_score(y_test, predics, average='macro') 
-test_accracy="{:.3f}".format(float(num_correct)/len(y_test))
-F_1=2*(Recall*Precision)/(Precision+Recall)
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
 
 print("flu | flu_relevant | majority | None | test | {} | {} | {} | {} | {}"\
-	.format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
+handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
+
+
+txt_about_flu=[]
+prediction_labels_about_flu=[]
+for ele in label_about_flu:
+    if ele=='yes':
+        prediction_labels_about_flu.append(1)
+        txt_about_flu.append(ele)
+    elif ele=='no':
+        prediction_labels_about_flu.append(0)
+        txt_about_flu.append(ele)
+
+txt_about_flu=np.array(txt_about_flu)
+prediction_labels_about_flu=np.array(prediction_labels_about_flu)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt_about_flu,prediction_labels_about_flu)
+
+print("flu-risk | label_about_flu | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("flu-risk | flu_about_flu | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
