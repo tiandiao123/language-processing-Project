@@ -246,3 +246,108 @@ print("flu-vaccine | flu_vaccine_relevant | majority | None | test | {} | {} | {
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
+data,labels=handle_health_json("../data/health.json.gz")
+
+txt=[]
+prediction_labels=[]
+for i in range(len(labels)):
+    if labels[i]=='health':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif labels[i]=='sick':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels)
+
+print("health.json | health-sick | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("health.json | health-sick | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+data,label_about_gov,label_about_vaccine,label_trust_gov=\
+handle_trust_in_gov('../data/trust-in-government.json.gz')
+
+
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_trust_gov)):
+    if label_trust_gov[i]=='yes_trust':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_trust_gov[i]=='neither_trust':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels)
+
+print("trust-in-government | label_trust_gov | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("trust-in-government | label_trust_gov | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_about_gov)):
+    if label_about_gov[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_about_gov[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels)
+
+print("trust-in-government | label_about_gov | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("trust-in-government | label_about_gov | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_about_vaccine)):
+    if label_about_vaccine[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_about_vaccine[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt,prediction_labels)
+
+print("trust-in-government | label_about_vaccine | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("trust-in-government | label_about_vaccine | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+
+

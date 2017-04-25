@@ -156,10 +156,4 @@ def handle_zika_conspiracy(path):
 	return data,labels
 
 
-# data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
-# 	label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
-# pprint(set(label_flu_vaccine_relevant))
-# pprint(set(label_flu_vaccine_received))
-# pprint(set(label_flu_vaccine_sentiment))
-# pprint(set(label_flu_vaccine_intent_to_receive))
 
