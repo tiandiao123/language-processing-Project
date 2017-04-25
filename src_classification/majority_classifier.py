@@ -92,7 +92,10 @@ def handle_two_classifications(txt,prediction_labels):
     F_1=2*(Recall*Precision)/(Precision+Recall)
     return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc
 
-print("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC")
+
+f=open("majority_classifer.txt","w+")
+
+f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
 prediction_labels_flu=[]
 for ele in labels_flu:
@@ -107,11 +110,11 @@ prediction_labels_flu=np.array(prediction_labels_flu)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt_flu,prediction_labels_flu)
 
-print("flu | flu_relevant | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu | flu_relevant | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu | flu_relevant | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu | flu_relevant | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -136,11 +139,11 @@ prediction_labels_about_flu_likelihood=np.array(prediction_labels_about_flu_like
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu_likelihood)
 
-print("flu-risk | label_about_flu_likelihood | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flu_likelihood | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-risk | label_about_flu_likelihood | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flu_likelihood | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 #case2:
@@ -160,11 +163,11 @@ prediction_labels_about_flu=np.array(prediction_labels_about_flu)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu)
 
-print("flu-risk | label_about_flu | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flu | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-risk | label_about_flu | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flu | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 #case3:
@@ -184,11 +187,11 @@ prediction_labels_about_flushot=np.array(prediction_labels_about_flushot)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flushot)
 
-print("flu-risk | label_about_flushot | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flushot | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-risk | label_about_flushot | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu-risk | label_about_flushot | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -212,11 +215,11 @@ prediction_labels_intend=np.array(prediction_labels_intend)
 
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels_intend)
-print("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -237,11 +240,11 @@ prediction_labels_flu_vaccine_relevant=np.array(prediction_labels_flu_vaccine_re
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels_flu_vaccine_relevant)
 
-print("flu-vaccine | flu_vaccine_relevant | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("flu-vaccine | flu_vaccine_relevant | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-vaccine | flu_vaccine_relevant | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("flu-vaccine | flu_vaccine_relevant | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -263,11 +266,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels)
 
-print("health.json | health-sick | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("health.json | health-sick | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("health.json | health-sick | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("health.json | health-sick | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -292,11 +295,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels)
 
-print("trust-in-government | label_trust_gov | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_trust_gov | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("trust-in-government | label_trust_gov | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_trust_gov | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -316,11 +319,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels)
 
-print("trust-in-government | label_about_gov | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_about_gov | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("trust-in-government | label_about_gov | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_about_gov | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -340,11 +343,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels)
 
-print("trust-in-government | label_about_vaccine | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_about_vaccine | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("trust-in-government | label_about_vaccine | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("trust-in-government | label_about_vaccine | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
 
 
@@ -366,12 +369,14 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
 handle_two_classifications(txt,prediction_labels)
 
-print("vaccine_sentiment | yes-no | majority | None | dev | {} | {} | {} | {} | {}"\
+f.write("vaccine_sentiment | yes-no | majority | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("vaccine_sentiment | yes-no | majority | None | test | {} | {} | {} | {} | {}"\
+f.write("vaccine_sentiment | yes-no | majority | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+pprint("please check majority_classifier.txt")
 
 
 
