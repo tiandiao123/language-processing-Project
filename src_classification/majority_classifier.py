@@ -35,7 +35,7 @@ def handle_two_classifications(txt,prediction_labels):
     kf = KFold(n_splits=4)
 
 
-    print("use svm training flurate(C=1)>>>")
+    #print("use svm training flurate(C=1)>>>")
     start=time.time()
     #construct SVM model, and compuet dev accuracy, precision, recall, F1 and auc value
     dev_acc=[]
@@ -46,13 +46,13 @@ def handle_two_classifications(txt,prediction_labels):
     clf = DummyClassifier(strategy='most_frequent',random_state=0)
     i=0
     for train_index, dev_index in kf.split(X_Kfold):
-        print("the {} iteraion".format(str(i)))
+        #print("the {} iteraion".format(str(i)))
         X_validation=X_Kfold[dev_index]
         y_validation=y_Kfold[dev_index]
         X_train=X_Kfold[train_index]
         y_train=y_Kfold[train_index]
-        print(len(X_train))
-        print(len(y_train))
+        #print(len(X_train))
+        #print(len(y_train))
         clf.fit(X_train,y_train)
         predics=clf.predict(X_validation)
         predics_prob=clf.predict_proba(X_validation)
@@ -68,7 +68,7 @@ def handle_two_classifications(txt,prediction_labels):
         dev_precision.append(precision)
         dev_recall.append(recall)
     end=time.time()
-    print("the training time is {}".format(str(end-start)))
+    #print("the training time is {}".format(str(end-start)))
 
 
     print("evaluation test_data......")
@@ -118,6 +118,31 @@ train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_
 handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
 
 
+#case 1:
+txt_about_flu=[]
+prediction_labels_about_flu_likelihood=[]
+for ele in label_about_flu_likelihood:
+    if ele=='likely':
+        prediction_labels_about_flu_likelihood.append(1)
+        txt_about_flu.append(ele)
+    elif ele=='unlikely':
+        prediction_labels_about_flu_likelihood.append(0)
+        txt_about_flu.append(ele)
+
+txt_about_flu=np.array(txt_about_flu)
+prediction_labels_about_flu_likelihood=np.array(prediction_labels_about_flu_likelihood)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt_about_flu,prediction_labels_about_flu_likelihood)
+
+print("flu-risk | label_about_flu_likelihood | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("flu-risk | label_about_flu_likelihood | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+#case2:
 txt_about_flu=[]
 prediction_labels_about_flu=[]
 for ele in label_about_flu:
@@ -138,5 +163,32 @@ print("flu-risk | label_about_flu | majority | None | dev | {} | {} | {} | {} | 
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-print("flu-risk | flu_about_flu | majority | None | test | {} | {} | {} | {} | {}"\
+print("flu-risk | label_about_flu | majority | None | test | {} | {} | {} | {} | {}"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+#case3:
+txt_about_flu=[]
+prediction_labels_about_flushot=[]
+for ele in label_about_fluShot:
+    if ele=='yes':
+        prediction_labels_about_flushot.append(1)
+        txt_about_flu.append(ele)
+    elif ele=='no':
+        prediction_labels_about_flushot.append(0)
+        txt_about_flu.append(ele)
+
+txt_about_flu=np.array(txt_about_flu)
+prediction_labels_about_flushot=np.array(prediction_labels_about_flushot)
+
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+handle_two_classifications(txt_about_flu,prediction_labels_about_flushot)
+
+print("flu-risk | label_about_flushot | majority | None | dev | {} | {} | {} | {} | {}"\
+    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+        str(np.mean(dev_auc))))
+
+print("flu-risk | label_about_flushot | majority | None | test | {} | {} | {} | {} | {}"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+
+
+

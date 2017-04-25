@@ -158,9 +158,9 @@ def handle_zika_conspiracy(path):
 
 train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
 handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
-pprint(set(label_about_flu))
+# pprint(set(label_about_flu))
 # pprint(set(label_about_fluShot))
-# pprint(set(label_about_flu_likelihood))
+pprint(set(label_about_flu_likelihood))
 # pprint(set(label_about_flu_severity))
 
 # count=0
