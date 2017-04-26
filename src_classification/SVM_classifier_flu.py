@@ -16,6 +16,8 @@ from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
+from sklearn import linear_model
+from sklearn.metrics import roc_curve, auc
 
 
 
@@ -54,7 +56,7 @@ dev_auc=[]
 dev_precision=[]
 dev_recall=[]
 dev_F1=[]
-clf = svm.SVC(C=1,kernel='linear',probability=True)
+clf = linear_model.SGDClassifier()
 i=0
 for train_index, dev_index in kf.split(X_Kfold):
     print("the {} iteraion".format(str(i)))
@@ -62,18 +64,16 @@ for train_index, dev_index in kf.split(X_Kfold):
     y_validation=y_Kfold[dev_index]
     X_train=X_Kfold[train_index]
     y_train=y_Kfold[train_index]
-    print(len(X_train))
-    print(len(y_train))
+    #print(len(X_train))
+    #print(len(y_train))
     clf.fit(X_train,y_train)
     predics=clf.predict(X_validation)
-    predics_prob=clf.predict_proba(X_validation)
-    probs=[]
-    for j in range(len(y_validation)):
-    	if y_validation[j]==1:
-    		probs.append(predics_prob[j][1])
-    	else:
-    		probs.append(predics_prob[j][0])
-    dev_auc.append(roc_auc_score(y_validation,probs))
+
+    y_validation_scores=clf.decision_function(X_validation)
+    fpr, tpr, _ = roc_curve(y_validation, y_validation_scores)
+    roc_auc = auc(fpr, tpr)
+    dev_auc.append(roc_auc)
+
     num_corrects=np.sum(np.array(predics)==np.array(y_validation))
     i+=1
     dev_acc.append(float(num_corrects)/len(y_validation))
@@ -94,22 +94,11 @@ print("flu | flu_relevant | linear_svm | unigram | dev | {} | {} | {} | {} | {}"
 
 
 print("evaluation test_data......")
-predics_prob=clf.predict_proba(X_test)
-probs=[]
-for i in range(len(y_test)):
-    if y_test[i]==1:
-        probs.append(predics_prob[i][1])
-    else:
-        probs.append(predics_prob[i][0])
+predics=clf.predict(X_test)
 
-auc=roc_auc_score(y_test,probs)
-
-predics=[]
-for i in range(len(predics_prob)):
-	if predics_prob[i][0]>=predics_prob[i][1]:
-		predics.append(0)
-	else:
-		predics.append(1)
+y_test_scores=clf.decision_function(X_test)
+fpr, tpr, _ = roc_curve(y_test, y_test_scores)
+auc = auc(fpr, tpr)
 
 
 num_correct=np.sum(np.array(predics)==y_test)

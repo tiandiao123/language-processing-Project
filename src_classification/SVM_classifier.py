@@ -17,6 +17,8 @@ from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
+from sklearn import linear_model
+from sklearn.metrics import roc_curve, auc
 
 
 def handle_two_classifications(txt,prediction_labels):
@@ -36,7 +38,7 @@ def handle_two_classifications(txt,prediction_labels):
     kf = KFold(n_splits=4)
 
 
-    #print("use svm training flurate(C=1)>>>")
+    print("use svm training flurate(C=1)>>>")
     start=time.time()
     #construct SVM model, and compuet dev accuracy, precision, recall, F1 and auc value
     dev_acc=[]
@@ -44,10 +46,10 @@ def handle_two_classifications(txt,prediction_labels):
     dev_precision=[]
     dev_recall=[]
     dev_F1=[]
-    clf = DummyClassifier(strategy='most_frequent',random_state=0)
+    clf = linear_model.SGDClassifier()
     i=0
     for train_index, dev_index in kf.split(X_Kfold):
-        #print("the {} iteraion".format(str(i)))
+        print("the {} iteraion".format(str(i)))
         X_validation=X_Kfold[dev_index]
         y_validation=y_Kfold[dev_index]
         X_train=X_Kfold[train_index]
@@ -56,9 +58,12 @@ def handle_two_classifications(txt,prediction_labels):
         #print(len(y_train))
         clf.fit(X_train,y_train)
         predics=clf.predict(X_validation)
-        predics_prob=clf.predict_proba(X_validation)
-        probs = predics_prob[:,1]
-        dev_auc.append(roc_auc_score(y_validation,probs))
+
+        y_validation_scores=clf.decision_function(X_validation)
+        fpr, tpr, _ = roc_curve(y_validation, y_validation_scores)
+        roc_auc = auc(fpr, tpr)
+        dev_auc.append(roc_auc)
+
         num_corrects=np.sum(np.array(predics)==np.array(y_validation))
         i+=1
         dev_acc.append(float(num_corrects)/len(y_validation))
@@ -69,19 +74,13 @@ def handle_two_classifications(txt,prediction_labels):
         dev_precision.append(precision)
         dev_recall.append(recall)
     end=time.time()
-    #print("the training time is {}".format(str(end-start)))
-
 
     print("evaluation test_data......")
-    predics_prob=clf.predict_proba(X_test)
-    probs = predics_prob[:,1]
-    auc=roc_auc_score(y_test,probs)
-    predics=[]
-    for i in range(len(predics_prob)):
-        if predics_prob[i][0]>=predics_prob[i][1]:
-            predics.append(0)
-        else:
-            predics.append(1)
+    predics=clf.predict(X_test)
+
+    y_test_scores=clf.decision_function(X_test)
+    fpr, tpr, _ = roc_curve(y_test, y_test_scores)
+    test_auc = auc(fpr, tpr)
 
 
     num_correct=np.sum(np.array(predics)==y_test)
@@ -90,10 +89,11 @@ def handle_two_classifications(txt,prediction_labels):
     Precision= precision_score(y_test, predics, average='macro') 
     test_accracy="{:.3f}".format(float(num_correct)/len(y_test))
     F_1=2*(Recall*Precision)/(Precision+Recall)
-    return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc
+
+    return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc
 
 
-f=open("majority_classifer.txt","w+")
+f=open("SVM_classifer_performance.txt","w+")
 
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
@@ -107,15 +107,15 @@ for ele in labels_flu:
 prediction_labels_flu=np.array(prediction_labels_flu)
 
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_flu,prediction_labels_flu)
 
-f.write("flu | flu_relevant | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu | flu_relevant | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu | flu_relevant | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu | flu_relevant | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
@@ -136,15 +136,15 @@ for i in range(len(label_about_flu_likelihood)):
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flu_likelihood=np.array(prediction_labels_about_flu_likelihood)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu_likelihood)
 
-f.write("flu-risk | label_about_flu_likelihood | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flu_likelihood | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flu_likelihood | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu-risk | label_about_flu_likelihood | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 #case2:
 txt_about_flu=[]
@@ -160,15 +160,15 @@ for i in range(len(label_about_flu)):
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flu=np.array(prediction_labels_about_flu)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu)
 
-f.write("flu-risk | label_about_flu | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flu | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flu | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu-risk | label_about_flu | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 #case3:
 txt_about_flu=[]
@@ -184,15 +184,15 @@ for i in range(len(label_about_fluShot)):
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flushot=np.array(prediction_labels_about_flushot)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flushot)
 
-f.write("flu-risk | label_about_flushot | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flushot | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flushot | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu-risk | label_about_flushot | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 
@@ -213,14 +213,14 @@ for i in range(len(label_flu_vaccine_intent_to_receive)):
 txt=np.array(txt)
 prediction_labels_intend=np.array(prediction_labels_intend)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels_intend)
-f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 
@@ -237,15 +237,15 @@ for i in range(len(label_flu_vaccine_relevant)):
 txt=np.array(txt)
 prediction_labels_flu_vaccine_relevant=np.array(prediction_labels_flu_vaccine_relevant)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels_flu_vaccine_relevant)
 
-f.write("flu-vaccine | flu_vaccine_relevant | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | flu_vaccine_relevant | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-vaccine | flu_vaccine_relevant | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("flu-vaccine | flu_vaccine_relevant | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 data,labels=handle_health_json("../data/health.json.gz")
@@ -263,15 +263,15 @@ for i in range(len(labels)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("health.json | health-sick | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("health.json | health-sick | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("health.json | health-sick | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("health.json | health-sick | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 data,label_about_gov,label_about_vaccine,label_trust_gov=\
@@ -292,15 +292,15 @@ for i in range(len(label_trust_gov)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_trust_gov | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_trust_gov | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_trust_gov | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("trust-in-government | label_trust_gov | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 txt=[]
@@ -316,15 +316,15 @@ for i in range(len(label_about_gov)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_about_gov | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_gov | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_about_gov | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("trust-in-government | label_about_gov | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 txt=[]
@@ -340,15 +340,15 @@ for i in range(len(label_about_vaccine)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_about_vaccine | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_vaccine | linear | Unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_about_vaccine | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("trust-in-government | label_about_vaccine | linear | Unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
 data,label_relevant=handle_vaccine_sentiment("../data/vaccine_sentiment.json.gz")
@@ -366,17 +366,17 @@ for i in range(len(label_relevant)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 
-dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,auc=\
+dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("vaccine_sentiment | yes-no | majority | None | dev | {} | {} | {} | {} | {}\n"\
+f.write("vaccine_sentiment | yes-no | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("vaccine_sentiment | yes-no | majority | None | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(auc)))
+f.write("vaccine_sentiment | yes-no | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
-pprint("please check majority_classifier.txt")
+pprint("please check SVM_classifier_performance.txt")
 
 
 

@@ -18,25 +18,9 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, Flatten
 from keras.layers import Conv1D, MaxPooling1D, Embedding
 from keras.models import Model
+from process_data import handle_flu_json,handle_flu_risk_perception
 
-
-# this function is used to extract data from flu.json file
-def handle_flu_json(path):
-	with open(path) as data_file:
-		json_data = [json.loads(line) for line in data_file]
-	train_txt=[]
-	train_label=[]
-	label=[]
-	for i in range(len(json_data)):
-		train_txt.append(json_data[i]['text'])
-		if 'flu_relevant' in json_data[i]['label']:
-			train_label.append(json_data[i]['label']['flu_relevant'])
-		else:
-			train_label.append('false')
-	return train_txt,train_label
-
-# load the dataset
-txt,labels=handle_flu_json("../data/flu.json")
+txt,labels=handle_flu_json("../data/flu.json.gz")
 
 #default value for hadnling large scale data
 MAX_SEQUENCE_LENGTH = 1000

@@ -1,0 +1,23 @@
+Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
+flu | flu_relevant | linear | unigram | dev | 0.75539971321 | 0.75766168642 | 0.75251705756 | 0.755007036644 | 0.835528469628
+flu | flu_relevant | linear | unigram | test | 0.765 | 0.767716835576 | 0.775090003 | 0.771385800881 | 0.842736424547
+flu-risk | label_about_flu_likelihood | linear | unigram | dev | 0.682873376623 | 0.518966840634 | 0.535726850549 | 0.525323712751 | 0.662071246977
+flu-risk | label_about_flu_likelihood | linear | unigram | test | 0.700 | 0.541733547352 | 0.537790697674 | 0.539754922089 | 0.707848837209
+flu-risk | label_about_flu | linear | unigram | dev | 0.92534154213 | 0.794107749929 | 0.670265822226 | 0.725787189649 | 0.901167214244
+flu-risk | label_about_flu | linear | unigram | test | 0.928 | 0.780024348972 | 0.742659175214 | 0.760883309569 | 0.899697777003
+flu-risk | label_about_flushot | linear | unigram | dev | 0.983903315502 | 0.979810279636 | 0.946320243928 | 0.962729213925 | 0.989591468203
+flu-risk | label_about_flushot | linear | unigram | test | 0.982 | 0.986969700835 | 0.922931504927 | 0.953877015796 | 0.98930999088
+flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | dev | 0.865524436032 | 0.859934304477 | 0.82897768555 | 0.844063040462 | 0.935983176279
+flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | test | 0.865 | 0.870787044281 | 0.822437409289 | 0.845921920429 | 0.941323022496
+flu-vaccine | flu_vaccine_relevant | linear | unigram | dev | 0.981343283582 | 0.94343634133 | 0.837628992449 | 0.886480852134 | 0.951727015169
+flu-vaccine | flu_vaccine_relevant | linear | unigram | test | 0.982 | 0.973510754287 | 0.828702951582 | 0.895289202215 | 0.967418498464
+health.json | health-sick | linear | unigram | dev | 0.829195177224 | 0.821348076078 | 0.786175132111 | 0.802603062539 | 0.896216833261
+health.json | health-sick | linear | unigram | test | 0.822 | 0.822889108469 | 0.759743589744 | 0.790056626449 | 0.861557692308
+trust-in-government | label_trust_gov | linear | unigram | dev | 0.950402955076 | 0.937126127843 | 0.696243846574 | 0.796964956524 | 0.894128743161
+trust-in-government | label_trust_gov | linear | unigram | test | 0.962 | 0.937576342012 | 0.738614204145 | 0.826286969901 | 0.904698051279
+trust-in-government | label_about_gov | linear | unigram | dev | 0.793033352104 | 0.779783285758 | 0.771147256673 | 0.774466986104 | 0.88027798986
+trust-in-government | label_about_gov | linear | unigram | test | 0.803 | 0.8228969667 | 0.710532926911 | 0.762598137328 | 0.897466367572
+trust-in-government | label_about_vaccine | linear | Unigram | dev | 0.827527319058 | 0.833241059001 | 0.818409267242 | 0.825627404767 | 0.924213582404
+trust-in-government | label_about_vaccine | linear | Unigram | test | 0.842 | 0.839404243578 | 0.8397624313 | 0.839583299236 | 0.925462820405
+vaccine_sentiment | yes-no | linear | unigram | dev | 0.949685534591 | 0.940711373927 | 0.93033247149 | 0.935225174969 | 0.984375837274
+vaccine_sentiment | yes-no | linear | unigram | test | 0.962 | 0.949715841631 | 0.954568874751 | 0.95213617426 | 0.983361762456
