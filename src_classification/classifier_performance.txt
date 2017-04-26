@@ -1,26 +1,4 @@
 Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
-flu | flu_relevant | majority | None | dev | 0.582942220671 | 0.291471110335 | 0.5 | 0.368262519495 | 0.5
-flu | flu_relevant | majority | None | test | 0.589 | 0.294398472311 | 0.5 | 0.370592948718 | 0.5
-flu-risk | label_about_flu | majority | None | dev | 0.909702824493 | 0.454851412247 | 0.5 | 0.476354188128 | 0.5
-flu-risk | label_about_flu | majority | None | test | 0.915 | 0.457360722067 | 0.5 | 0.477730819246 | 0.5
-flu-risk | label_about_flushot | majority | None | dev | 0.875476214716 | 0.437738107358 | 0.5 | 0.466795312821 | 0.5
-flu-risk | label_about_flushot | majority | None | test | 0.883 | 0.441276202219 | 0.5 | 0.468806287866 | 0.5
-flu-risk | label_about_flu_likelihood | majority | None | dev | 0.724107142857 | 0.362053571429 | 0.5 | 0.418581010478 | 0.5
-flu-risk | label_about_flu_likelihood | majority | None | test | 0.809 | 0.404545454545 | 0.5 | 0.447236180905 | 0.5
-flu-vaccine | flu_vaccine_relevant | majority | None | dev | 0.953134328358 | 0.476567164179 | 0.5 | 0.487997719123 | 0.5
-flu-vaccine | flu_vaccine_relevant | majority | None | test | 0.949 | 0.474393939394 | 0.5 | 0.486860519359 | 0.5
-flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | dev | 0.671424582612 | 0.335712291306 | 0.5 | 0.401686075695 | 0.5
-flu-vaccine | label_flu_vaccine_intent_to_receive | majority | None | test | 0.664 | 0.332165605096 | 0.5 | 0.399158055874 | 0.5
-health.json | health-sick | majority | None | dev | 0.680777100614 | 0.340388550307 | 0.5 | 0.404943931571 | 0.5
-health.json | health-sick | majority | None | test | 0.686 | 0.342857142857 | 0.5 | 0.406779661017 | 0.5
-trust-in-government | label_about_gov | majority | None | dev | 0.683151380323 | 0.341575690161 | 0.5 | 0.405862397301 | 0.5
-trust-in-government | label_about_gov | majority | None | test | 0.680 | 0.339959568733 | 0.5 | 0.404733253109 | 0.5
-trust-in-government | label_about_vaccine | majority | None | dev | 0.577977552458 | 0.288988776229 | 0.5 | 0.366216149803 | 0.5
-trust-in-government | label_about_vaccine | majority | None | test | 0.575 | 0.287334913647 | 0.5 | 0.364946236559 | 0.5
-trust-in-government | label_trust_gov | majority | None | dev | 0.926772387053 | 0.463386193526 | 0.5 | 0.480987599807 | 0.5
-trust-in-government | label_trust_gov | majority | None | test | 0.925 | 0.462592202318 | 0.5 | 0.48056923919 | 0.5
-vaccine_sentiment | yes-no | majority | None | dev | 0.730738993711 | 0.365369496855 | 0.5 | 0.422189874529 | 0.5
-vaccine_sentiment | yes-no | majority | None | test | 0.746 | 0.372807017544 | 0.5 | 0.427135678392 | 0.5
 flu | flu_relevant | linear_svm | unigram | test | 0.778 | 0.775146328267 | 0.761642027896 | 0.768334844561 | 0.578455691974
 flu | flu_relevant | linear_svm | unigram | dev | 0.791152913652 | 0.79311709419828991 |0.76581264498929802 | 0.77922575267663419 | 0.59303288156476208
 zika_conspiracy | zika_conspiracy | linear_svm | unigram | test | 0.768 | 0.76700603713 | 0.753888971845 | 0.760390939964 | 0.6611194067
