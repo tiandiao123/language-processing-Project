@@ -94,8 +94,8 @@ def handle_two_classifications(txt,prediction_labels):
 
 
 f=open("majority_classifer.txt","w+")
-
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
+
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
 prediction_labels_flu=[]
 for ele in labels_flu:

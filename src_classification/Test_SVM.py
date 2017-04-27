@@ -20,7 +20,7 @@ from sklearn.model_selection import KFold
 
 # In[51]:
 
-txt,labels=handle_flu_json("../json_data/flu.json")
+txt,labels=handle_flu_json("../data/flu.json.gz")
 prediction_labels=[]
 for ele in labels:
     if ele=='true':
@@ -82,7 +82,7 @@ print("use svm training flurate(set C=0.01)>>>")
 start=time.time()
 #construct SVM model
 acc=[]
-clf = svm.SVC(C=0.001,kernel='linear')
+clf = svm.SVC(C=0.01,kernel='linear')
 clf.fit(X_Kfold,y_Kfold)
 i=0
 for train_index, dev_index in kf.split(X_Kfold):
@@ -105,7 +105,7 @@ print("use svm training flurate(set C=0.1)>>>")
 start=time.time()
 #construct SVM model
 acc=[]
-clf = svm.SVC(C=0.001,kernel='linear')
+clf = svm.SVC(C=0.1,kernel='linear')
 clf.fit(X_Kfold,y_Kfold)
 i=0
 for train_index, dev_index in kf.split(X_Kfold):
@@ -128,7 +128,7 @@ print("use svm training flurate(set C=1)>>>")
 start=time.time()
 #construct SVM model
 acc=[]
-clf = svm.SVC(C=0.001,kernel='linear')
+clf = svm.SVC(C=1,kernel='linear')
 clf.fit(X_Kfold,y_Kfold)
 i=0
 for train_index, dev_index in kf.split(X_Kfold):
@@ -152,7 +152,7 @@ print("use svm training flurate(set C=10)>>>")
 start=time.time()
 #construct SVM model
 acc=[]
-clf = svm.SVC(C=0.001,kernel='linear')
+clf = svm.SVC(C=10,kernel='linear')
 clf.fit(X_Kfold,y_Kfold)
 i=0
 for train_index, dev_index in kf.split(X_Kfold):

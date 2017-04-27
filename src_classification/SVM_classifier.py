@@ -19,6 +19,8 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
 from sklearn import linear_model
 from sklearn.metrics import roc_curve, auc
+from sklearn.model_selection import GridSearchCV, cross_val_score
+
 
 
 def handle_two_classifications(txt,prediction_labels):
@@ -37,8 +39,6 @@ def handle_two_classifications(txt,prediction_labels):
     X_Kfold,X_test,y_Kfold,y_test=train_test_split(data,prediction_labels,test_size=0.33)
     kf = KFold(n_splits=4)
 
-
-    print("use svm training flurate(C=1)>>>")
     start=time.time()
     #construct SVM model, and compuet dev accuracy, precision, recall, F1 and auc value
     dev_acc=[]
@@ -46,7 +46,11 @@ def handle_two_classifications(txt,prediction_labels):
     dev_precision=[]
     dev_recall=[]
     dev_F1=[]
-    clf = linear_model.SGDClassifier()
+    alphas=[0.0001,0.001,0.01,0.1,1,10]
+    model = linear_model.SGDClassifier()
+    clf = GridSearchCV(estimator=model, param_grid=dict(alpha=alphas))
+    clf.fit(X_Kfold,y_Kfold)
+    
     i=0
     for train_index, dev_index in kf.split(X_Kfold):
         print("the {} iteraion".format(str(i)))

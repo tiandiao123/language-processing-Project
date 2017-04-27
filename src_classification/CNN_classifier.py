@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 #The following codes are used to handle flu.json and detect whether the flu-relavant factor is related to the comments of twitter
 
 import numpy as np
