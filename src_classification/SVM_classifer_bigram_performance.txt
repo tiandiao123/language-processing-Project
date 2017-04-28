@@ -1,0 +1,23 @@
+Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
+flu | flu_relevant | linear | bigram | dev | 0.765130134839 | 0.776736063881 | 0.738295669627 | 0.756975187259 | 0.832368671645
+flu | flu_relevant | linear | bigram | test | 0.756 | 0.758226790913 | 0.732515115438 | 0.745149221213 | 0.834763172024
+flu-risk | label_about_flu_likelihood | linear | bigram | dev | 0.691904233 | 0.41541102506 | 0.502970885324 | 0.452473782132 | 0.517114338112
+flu-risk | label_about_flu_likelihood | linear | bigram | test | 0.727 | 0.614128215598 | 0.649545211343 | 0.631340397112 | 0.653290529695
+flu-risk | label_about_flu | linear | bigram | dev | 0.925647375638 | 0.823590171263 | 0.649093589507 | 0.724485726432 | 0.881635858177
+flu-risk | label_about_flu | linear | bigram | test | 0.927 | 0.842690239868 | 0.621079099898 | 0.715108974415 | 0.899894671472
+flu-risk | label_about_flushot | linear | bigram | dev | 0.977372817008 | 0.978218767254 | 0.914478282271 | 0.945131701086 | 0.96756007459
+flu-risk | label_about_flushot | linear | bigram | test | 0.978 | 0.977569741141 | 0.920039419566 | 0.947932499324 | 0.948217304084
+flu-vaccine | label_flu_vaccine_intent_to_receive | linear | bigram | dev | 0.844816291865 | 0.856001660381 | 0.786903940308 | 0.819690027853 | 0.922782928586
+flu-vaccine | label_flu_vaccine_intent_to_receive | linear | bigram | test | 0.833 | 0.850089692052 | 0.771986600651 | 0.809157811588 | 0.920242340633
+flu-vaccine | flu_vaccine_relevant | linear | bigram | dev | 0.975970237277 | 0.921492408093 | 0.798069501311 | 0.855197499604 | 0.956640002393
+flu-vaccine | flu_vaccine_relevant | linear | bigram | test | 0.979 | 0.93887713992 | 0.806693306693 | 0.867780393568 | 0.937174395852
+health.json | health-sick | linear | bigram | dev | 0.75456053068 | 0.769583300649 | 0.640833029945 | 0.698016410933 | 0.759535709335
+health.json | health-sick | linear | bigram | test | 0.780 | 0.78107998611 | 0.688812140376 | 0.73205015163 | 0.780117671453
+trust-in-government | label_trust_gov | linear | bigram | dev | 0.922356537159 | 0.509374859036 | 0.502530031265 | 0.504089448944 | 0.806960038215
+trust-in-government | label_trust_gov | linear | bigram | test | 0.935 | 0.842724867725 | 0.522872528249 | 0.645340542541 | 0.828919491525
+trust-in-government | label_about_gov | linear | bigram | dev | 0.710709013952 | 0.676003941438 | 0.630656896579 | 0.650960610267 | 0.765947226954
+trust-in-government | label_about_gov | linear | bigram | test | 0.718 | 0.679680818376 | 0.695261294993 | 0.687382779786 | 0.778202722613
+trust-in-government | label_about_vaccine | linear | bigram | dev | 0.72944430173 | 0.744870381253 | 0.70161226727 | 0.7225046605 | 0.856463803763
+trust-in-government | label_about_vaccine | linear | bigram | test | 0.745 | 0.74455812551 | 0.722386424127 | 0.733304720993 | 0.845870668781
+vaccine_sentiment | yes-no | linear | bigram | dev | 0.86713836478 | 0.902248105178 | 0.766072436896 | 0.828521553472 | 0.926993031096
+vaccine_sentiment | yes-no | linear | bigram | test | 0.865 | 0.906177536232 | 0.731359788669 | 0.80943719733 | 0.936258508783

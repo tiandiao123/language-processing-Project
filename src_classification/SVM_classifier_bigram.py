@@ -24,8 +24,10 @@ from sklearn.model_selection import GridSearchCV, cross_val_score
 
 
 def handle_two_classifications(txt,prediction_labels):
-    ##make td-idf matric
-    count_vectorizer = CountVectorizer()
+    #make td-idf matric
+    #count_vectorizer = CountVectorizer(ngram_range=(2, 2),token_pattern=r'\b\w+\b', min_df=1)
+    #make td-idf matric
+    count_vectorizer = CountVectorizer(ngram_range=(2,2),min_df=2,max_features=1500)
     count_vectorizer.fit_transform(txt)
     freq_term_matrix=count_vectorizer.transform(txt)
 
@@ -97,7 +99,7 @@ def handle_two_classifications(txt,prediction_labels):
     return dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc
 
 
-f=open("SVM_classifer_performance.txt","w+")
+f=open("SVM_classifer_bigram_performance.txt","w+")
 
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
@@ -114,11 +116,11 @@ prediction_labels_flu=np.array(prediction_labels_flu)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_flu,prediction_labels_flu)
 
-f.write("flu | flu_relevant | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu | flu_relevant | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu | flu_relevant | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("flu | flu_relevant | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -143,23 +145,23 @@ prediction_labels_about_flu_likelihood=np.array(prediction_labels_about_flu_like
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu_likelihood)
 
-f.write("flu-risk | label_about_flu_likelihood | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flu_likelihood | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flu_likelihood | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flu_likelihood | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 #case2:
 txt_about_flu=[]
 prediction_labels_about_flu=[]
 for i in range(len(label_about_flu)):
-    if label_about_flu[i]=='yes':
-        prediction_labels_about_flu.append(1)
-        txt_about_flu.append(train_data[i])
-    elif label_about_flu[i]=='no':
-        prediction_labels_about_flu.append(0)
-        txt_about_flu.append(train_data[i])
+   if label_about_flu[i]=='yes':
+       prediction_labels_about_flu.append(1)
+       txt_about_flu.append(train_data[i])
+   elif label_about_flu[i]=='no':
+       prediction_labels_about_flu.append(0)
+       txt_about_flu.append(train_data[i])
 
 txt_about_flu=np.array(txt_about_flu)
 prediction_labels_about_flu=np.array(prediction_labels_about_flu)
@@ -167,12 +169,12 @@ prediction_labels_about_flu=np.array(prediction_labels_about_flu)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flu)
 
-f.write("flu-risk | label_about_flu | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
-    .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
-        str(np.mean(dev_auc))))
+f.write("flu-risk | label_about_flu | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
+   .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
+       str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flu | linear | unigram | test | {} | {} | {} | {} | {}\n"\
-    .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
+f.write("flu-risk | label_about_flu | linear | bigram | test | {} | {} | {} | {} | {}\n"\
+   .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 #case3:
 txt_about_flu=[]
@@ -191,11 +193,11 @@ prediction_labels_about_flushot=np.array(prediction_labels_about_flushot)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt_about_flu,prediction_labels_about_flushot)
 
-f.write("flu-risk | label_about_flushot | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flushot | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-risk | label_about_flushot | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("flu-risk | label_about_flushot | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -219,11 +221,11 @@ prediction_labels_intend=np.array(prediction_labels_intend)
 
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels_intend)
-f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -244,11 +246,11 @@ prediction_labels_flu_vaccine_relevant=np.array(prediction_labels_flu_vaccine_re
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels_flu_vaccine_relevant)
 
-f.write("flu-vaccine | flu_vaccine_relevant | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | flu_vaccine_relevant | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("flu-vaccine | flu_vaccine_relevant | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("flu-vaccine | flu_vaccine_relevant | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -270,11 +272,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("health.json | health-sick | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("health.json | health-sick | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("health.json | health-sick | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("health.json | health-sick | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -299,11 +301,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_trust_gov | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_trust_gov | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_trust_gov | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_trust_gov | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -323,11 +325,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_about_gov | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_gov | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_about_gov | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_gov | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -347,11 +349,11 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("trust-in-government | label_about_vaccine | linear | Unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_vaccine | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("trust-in-government | label_about_vaccine | linear | Unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("trust-in-government | label_about_vaccine | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
 
@@ -373,14 +375,14 @@ prediction_labels=np.array(prediction_labels)
 dev_acc,dev_precision,dev_recall,dev_F1,dev_auc,test_accracy,Precision,Recall,F_1,test_auc=\
 handle_two_classifications(txt,prediction_labels)
 
-f.write("vaccine_sentiment | yes-no | linear | unigram | dev | {} | {} | {} | {} | {}\n"\
+f.write("vaccine_sentiment | yes-no | linear | bigram | dev | {} | {} | {} | {} | {}\n"\
     .format(str(np.mean(dev_acc)),str(np.mean(dev_precision)),str(np.mean(dev_recall)),str(np.mean(dev_F1)),\
         str(np.mean(dev_auc))))
 
-f.write("vaccine_sentiment | yes-no | linear | unigram | test | {} | {} | {} | {} | {}\n"\
+f.write("vaccine_sentiment | yes-no | linear | bigram | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_accracy),str(Precision),str(Recall),str(F_1),str(test_auc)))
 
-pprint("please check SVM_classifier_performance.txt")
+pprint("please check SVM_classifier_bgram_performance.txt")
 
 
 

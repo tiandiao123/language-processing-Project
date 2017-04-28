@@ -33,8 +33,10 @@ prediction_labels=np.array(prediction_labels)
 
 
 ## make tf_idf_matrix
-count_vectorizer = CountVectorizer()
+count_vectorizer =CountVectorizer(ngram_range=(2, 2),token_pattern=r'\b\w+\b', min_df=1)
 count_vectorizer.fit_transform(txt)
+analyze=count_vectorizer.build_analyzer()
+
 freq_term_matrix=count_vectorizer.transform(txt)
 
 tfidf = TfidfTransformer(norm="l2")
@@ -43,6 +45,7 @@ tfidf.fit(freq_term_matrix)
 tf_idf_matrix = tfidf.transform(freq_term_matrix)
 data=tf_idf_matrix.todense()
 
+pprint(np.sum(data[0]))
 #split the data into training data and test data
 X_Kfold,X_test,y_Kfold,y_test=train_test_split(data,prediction_labels,test_size=0.33)
 kf = KFold(n_splits=4)
