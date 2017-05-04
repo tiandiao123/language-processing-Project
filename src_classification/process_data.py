@@ -5,7 +5,6 @@ import json
 from pprint import pprint
 import time
 import math
-from textblob import TextBlob as tb
 import gzip
 
 ##extract data:txt, labels:flu-relavant
