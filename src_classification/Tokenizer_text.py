@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 import numpy as np
-import scipy as sp
-import json
 from pprint import pprint
 import time
 import math
-import gzip
 from process_data import handle_flu_json,handle_flu_risk_perception,handle_flu_vaccine_new
 from process_data import handle_health_json,handle_trust_in_gov,handle_vaccine_sentiment,handle_zika_conspiracy
 import nltk
-from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 
 vocabulary_size=8000
@@ -18,7 +14,7 @@ sentence_start_token="SENTENCE_START_TOKEN"
 
 
 
-txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
+#txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
 
 def tokenize_words(txt,labels):
 	sentences=[]
