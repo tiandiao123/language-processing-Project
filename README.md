@@ -1,7 +1,15 @@
 ### Twitter Classifier Research Project 
 ### Location: Department of Computer Science of the Johns Hopkins University
 
-TODO:
+
+### Description of the research project:
+
+Firstly, there is a data file that contains multiple data sets, and the data sets includes text languages about health information and their labels. What we need to do is that designing machine learning algorithms to find the relation between languages text information and the corresponding labels. 
+
+We are using Support Vector Machine and Recurrent neural network to solve the problems. It turns out that the langues texts of the Twitter have deep relation with health issues such as flu-relavant. More details can be found in the txt file in the src_classifier fold. Those txt file contains information of our training using SVM and GRU algorithms. More models will be added later on!
+
+
+### TODO:
 
 4/17
 
