@@ -12,11 +12,28 @@ To test my model:
 For example, you can type 
 ```
 python GRU_classifier.py 
-
 ```
 to train my model. 
 
 Also, make sure to install [keras](https://keras.io/#installation) and [tensorflow](https://www.tensorflow.org/install/) so that you can run my python file!!!
+
+Also , here is an example showing the structure of the GRU:
+```
+Layer (type)                 Output Shape              Param #   
+=================================================================
+embedding_10 (Embedding)     (None, 40, 32)            608000    
+_________________________________________________________________
+dropout_19 (Dropout)         (None, 40, 32)            0         
+_________________________________________________________________
+gru_10 (GRU)                 (None, 30)                5670      
+_________________________________________________________________
+dropout_20 (Dropout)         (None, 30)                0         
+_________________________________________________________________
+dense_10 (Dense)             (None, 2)                 62        
+=================================================================
+
+
+```
 
 
 ### TODO (The following contents were added by Dr. Adrian):
