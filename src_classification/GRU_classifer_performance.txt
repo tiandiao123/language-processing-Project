@@ -1,0 +1,12 @@
+Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
+flu | flu_relevant | GRU_classifier | None | test | 1.0 | 1.0 | 1.0 | 1.0 | 1.0
+flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.73 | 0.365 | 0.5 | 0.421965317919 | 1.0
+flu-risk | label_about_flu | GRU_classifer | None | test | 1.0 | 1.0 | 1.0 | 1.0 | 1.0
+flu-risk | label_about_flushot | GRU_classifer | None | test | 1.0 | 1.0 | 1.0 | 1.0 | 1.0
+flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | 0.999649614576 | 0.999733759318 | 0.999488229273 | 0.999610979219 | 1.0
+flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | 0.998666666667 | 0.985815602837 | 0.999301432064 | 0.992512709675 | 0.999632869406
+health.json | health-sick | GRU_classifer | None | test | 0.935304989987 | 0.957627118644 | 0.89263803681 | 0.923991233 | 0.999983769922
+trust-in-government | label_trust_gov| GRU_classifer | None | test | 1.0 | 1.0 | 1.0 | 1.0 | 1.0
+trust-in-government | label_about_gov| GRU_classifer | None | test | 1.0 | 1.0 | 1.0 | 1.0 | 1.0
+trust-in-government | label_about_vaccine| GRU_classifer | None | test | 0.999255121043 | 0.999354422208 | 0.999121265378 | 0.999237830192 | 1.0
+vaccine_sentiment | yes-no| GRU_classifer | None | test | 0.999122807018 | 0.999403341289 | 0.998349834983 | 0.998876310355 | 0.99998817086
