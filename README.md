@@ -16,7 +16,7 @@ python GRU_classifier.py
 ```
 to train my model. 
 
-Also, make sure to install [keras] and [tensorflow] so that you can run my python file!!!
+Also, make sure to install [keras](https://keras.io/#installation) and [tensorflow](https://www.tensorflow.org/install/) so that you can run my python file!!!
 
 
 ### TODO (The following contents were added by Dr. Adrian):
