@@ -14,8 +14,6 @@ sentence_start_token="SENTENCE_START_TOKEN"
 
 
 
-#txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
-
 def tokenize_words(txt,labels):
 	sentences=[]
 	for i in range(len(txt)):
@@ -26,12 +24,3 @@ def tokenize_words(txt,labels):
 	label_index=tokenizer.texts_to_sequences(labels)
 	return sequences,label_index
 
-
-
-# sequences,label_index=token_words(txt_flu,labels_flu)
-
-# for i in range(len(sequences)):
-# 	pprint(sequences[i])
-# 	time.sleep(2)
-# 	pprint(label_index[i])
-# 	time.sleep(1)

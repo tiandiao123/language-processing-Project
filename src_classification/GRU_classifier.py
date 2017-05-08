@@ -1,4 +1,5 @@
 import numpy as np
+import keras
 from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
@@ -40,14 +41,22 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	#print(prediction_labels)
 
 	prediction_labels=np.array(prediction_labels)
-	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.33)
+	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.2)
 	#max_review_length = 500
 	X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
 	X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
+
 	X_train=np.array(X_train)
 	X_test=np.array(X_test)
+
+	y_train_c = keras.utils.to_categorical(y_train, 2)
+	y_test_c = keras.utils.to_categorical(y_test, 2)
+	
 	print(X_train.shape)
 	print(X_test.shape)
+
+	print(y_test)
+	#print(y_test_c)
 
 	embedding_vecor_length = 32
 	model = Sequential()
@@ -55,36 +64,47 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	model.add(Dropout(0.2))
 	model.add(GRU(30))
 	model.add(Dropout(0.2))
-	model.add(Dense(1, activation='sigmoid'))
-	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+	model.add(Dense(2, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	print(model.summary())
-	model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=2, batch_size=64)
-	scores = model.evaluate(X_test, y_test, verbose=0)
+	model.fit(X_train, y_train_c, validation_data=(X_test, y_test_c), epochs=3, batch_size=64)
+	scores = model.evaluate(X_test, y_test_c, verbose=0)
+	test_acc=scores[1]
 	
 	probs = model.predict(x=X_test)
+	print(probs)
 	predics=[]
 	for ele in probs:
-		if ele>=0.5:
-			predics.append(1)
-		else:
-			predics.append(0)
+	 	if ele[1]>=0.5:
+	 		predics.append(1)
+	 	else:
+	 		predics.append(0)
 
-	Recall=recall_score(y_test, predics, average='macro') 
-	Precision= precision_score(y_test, predics, average='macro')
-	F_1=2*(Recall*Precision)/(Precision+Recall)
-	auc=roc_auc_score(y_test,probs)
+	print(predics)
 
-	print("Testing Accuracy: %.2f%%" % (scores[1]*100))
-	print("F_1 for testing data is : {}".format(str(F_1)))
-	print("Recall for testing data is : {}".format(str(Recall)))
-	print("Precision for testing data is : {}".format(str(Precision)))
-	print("the auc value for testing data is :{}".format(str(auc)))
+	test_Recall=recall_score(y_test, predics, average='macro') 
+	test_Precision= precision_score(y_test, predics, average='macro')
+	test_F_1=2*(test_Recall*test_Precision)/(test_Precision+test_Recall)
+	test_auc=roc_auc_score(y_test,probs[:,1])
+
+	# print("Testing Accuracy: %.2f%%" % (scores[1]*100))
+	# print("F_1 for testing data is : {}".format(str(F_1)))
+	# print("Recall for testing data is : {}".format(str(Recall)))
+	# print("Precision for testing data is : {}".format(str(Precision)))
+	# print("the auc value for testing data is :{}".format(str(auc)))
+	return test_acc,test_F_1,test_Recall,test_Precision,test_auc
 	
+
+# f=open("GRU_classifer_performance.txt","w+")
+# f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 
 
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
 sequences,labels=tokenize_words(txt_flu,labels_flu)
-GRU_train_prediction(sequences,labels,40,10000)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,10000)
+
+print("flu | flu_relevant | GRU_RNN | None | test | %.6f%% | %.6f%% | %.6f%% | %.6f%% | %.6f%% \n" % \
+	(test_auc*100,test_Precision*100,test_Recall*100,test_F_1*100,test_auc*100))
 
 
 
