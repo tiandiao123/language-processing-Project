@@ -14,17 +14,36 @@ from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from Tokenizer_text import tokenize_words
 import time
-import Tokenizer_text
+#import Tokenizer_text
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import GridSearchCV, cross_val_score
+import nltk
+
+
+
+vocabulary_size=8000
+unknown_token = "UNKNOWN_TOKEN"
+sentence_start_token="SENTENCE_START_TOKEN"
+
+
+
+def tokenize_words(txt,labels):
+	sentences=[]
+	for i in range(len(txt)):
+		sentences.append("{} {} {}".format(sentence_start_token,txt[i],labels[i]))
+	tokenizer = Tokenizer()
+	tokenizer.fit_on_texts(sentences)
+	sequences = tokenizer.texts_to_sequences(sentences)
+	label_index=tokenizer.texts_to_sequences(labels)
+	return sequences,label_index
+
 
 
 def GRU_train_prediction(sequences,labels,max_review_length,top_words):
-	#split the data into training data and test data
 	#top_words = 10000
 	labels=np.array(labels)
 	label_array=labels.flatten()
@@ -41,7 +60,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	#print(prediction_labels)
 
 	prediction_labels=np.array(prediction_labels)
-	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.2)
+	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.3)
 	#max_review_length = 500
 	X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
 	X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
@@ -52,11 +71,11 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	y_train_c = keras.utils.to_categorical(y_train, 2)
 	y_test_c = keras.utils.to_categorical(y_test, 2)
 	
-	print(X_train.shape)
-	print(X_test.shape)
+	# print(X_train.shape)
+	# print(X_test.shape)
 
-	print(y_test)
-	#print(y_test_c)
+	# print(y_test)
+	# print(y_test_c)
 
 	embedding_vecor_length = 32
 	model = Sequential()
@@ -72,7 +91,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	test_acc=scores[1]
 	
 	probs = model.predict(x=X_test)
-	print(probs)
+	# print(probs)
 	predics=[]
 	for ele in probs:
 	 	if ele[1]>=0.5:
@@ -80,18 +99,13 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 	 	else:
 	 		predics.append(0)
 
-	print(predics)
+	#print(predics)
 
 	test_Recall=recall_score(y_test, predics, average='macro') 
 	test_Precision= precision_score(y_test, predics, average='macro')
 	test_F_1=2*(test_Recall*test_Precision)/(test_Precision+test_Recall)
 	test_auc=roc_auc_score(y_test,probs[:,1])
 
-	# print("Testing Accuracy: %.2f%%" % (scores[1]*100))
-	# print("F_1 for testing data is : {}".format(str(F_1)))
-	# print("Recall for testing data is : {}".format(str(Recall)))
-	# print("Precision for testing data is : {}".format(str(Precision)))
-	# print("the auc value for testing data is :{}".format(str(auc)))
 	return test_acc,test_F_1,test_Recall,test_Precision,test_auc
 	
 
@@ -99,51 +113,104 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words):
 # f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 
 
-txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
-sequences,labels=tokenize_words(txt_flu,labels_flu)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,10000)
+# txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
+# sequences,labels=tokenize_words(txt_flu,labels_flu)
+# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,10000)
 
-print("flu | flu_relevant | GRU_RNN | None | test | %.6f%% | %.6f%% | %.6f%% | %.6f%% | %.6f%% \n" % \
-	(test_auc*100,test_Precision*100,test_Recall*100,test_F_1*100,test_auc*100))
-
-
-
-##################################################################################################################
-
-#split the data into training data and test data
-# top_words = 5000
-# labels=np.array(labels)
-# label_array=labels.flatten()
-
-# label2index=list(set(label_array))
-# prediction_labels=[]
-# for i in range(len(labels)):
-# 	if labels[i]==label2index[0]:
-# 		prediction_labels.append(0)
-# 	else:
-# 		prediction_labels.append(1)
-
-# prediction_labels=np.array(prediction_labels)
-# X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.33)
-
-# max_review_length = 40
-# X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
-# X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
-# X_train=np.array(X_train)
-# X_test=np.array(X_test)
-
-
-# for ele in X_train:
-# 	print(ele)
-# 	time.sleep(1)
-
-# print(X_train.shape)
+# print("flu | flu_relevant | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
+#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
 
+train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
+handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
+
+#case 1:
+# txt_about_flu=[]
+# prediction_labels_about_flu_likelihood=[]
+# for i in range(len(label_about_flu_likelihood)):
+#     if label_about_flu_likelihood[i]=='likely':
+#         prediction_labels_about_flu_likelihood.append("likely")
+#         txt_about_flu.append(train_data[i])
+#     elif label_about_flu_likelihood[i]=='unlikely':
+#         prediction_labels_about_flu_likelihood.append("unlikely")
+#         txt_about_flu.append(train_data[i])
+
+# sequences,labels=tokenize_words(txt_about_flu,prediction_labels_about_flu_likelihood)
+# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,10000)
+
+# print("flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
+#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
-###################################################################################################
+#case 2:
+# txt_about_flu=[]
+# prediction_labels_about_flu=[]
+# for i in range(len(label_about_flu)):
+#     if label_about_flu[i]=='yes':
+#         prediction_labels_about_flu.append("yes")
+#         txt_about_flu.append(train_data[i])
+#     elif label_about_flu[i]=='no':
+#         prediction_labels_about_flu.append("no")
+#         txt_about_flu.append(train_data[i])
+
+# print(len(txt_about_flu))
+
+# sequences,labels=tokenize_words(txt_about_flu,prediction_labels_about_flu)
+# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,18000)
+
+# print("flu-risk | label_about_flu | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
+
+
+
+# txt_about_flu=[]
+# prediction_labels_about_flushot=[]
+# for i in range(len(label_about_fluShot)):
+#     if label_about_fluShot[i]=='yes':
+#         prediction_labels_about_flushot.append("yes")
+#         txt_about_flu.append(train_data[i])
+#     elif label_about_fluShot[i]=='no':
+#         prediction_labels_about_flushot.append("no")
+#         txt_about_flu.append(train_data[i])
+
+
+# print(len(txt_about_flu))
+
+# sequences,labels=tokenize_words(txt_about_flu,prediction_labels_about_flushot)
+# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,18000)
+
+# print("flu-risk | label_about_flushot | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
+
+
+
+
+data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
+    label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
+
+# txt=[]
+# prediction_labels_intend=[]
+# for i in range(len(label_flu_vaccine_intent_to_receive)):
+#     if label_flu_vaccine_intent_to_receive[i]=='yes':
+#         prediction_labels_intend.append("yes")
+#         txt.append(data[i])
+#     elif label_flu_vaccine_intent_to_receive[i]=='no':
+#         prediction_labels_intend.append("no")
+#         txt.append(data[i])
+
+# print(len(txt))
+
+# sequences,labels=tokenize_words(txt,prediction_labels_intend)
+# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000)
+
+# print("flu-risk | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
+
+
 
 
 
