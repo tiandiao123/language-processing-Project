@@ -8,6 +8,16 @@ Firstly, there is a data file that contains multiple data sets, and the data set
 
 We are using Support Vector Machine and Recurrent neural network to solve the problems. It turns out that the language texts of the Twitter have deep relation with health issues such as flu-relavant. More details can be found in the txt file in the src_classifier fold. Those txt file contains information of our training using SVM and GRU algorithms. More models will be added later on!
 
+To test my model:
+For example, you can type 
+```
+python GRU_classifier.py 
+
+```
+to train my model. 
+
+Also, make sure to install [keras] and [tensorflow] so that you can run my python file!!!
+
 
 ### TODO (The following contents were added by Dr. Adrian):
 
