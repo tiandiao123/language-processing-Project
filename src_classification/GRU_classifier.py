@@ -34,20 +34,18 @@ sentence_start_token="SENTENCE_START_TOKEN"
 def tokenize_words(txt,labels):
 	sentences=[]
 	for i in range(len(txt)):
-		sentences.append("{} {} {}".format(sentence_start_token,txt[i],labels[i]))
+		sentences.append("{} {}".format(sentence_start_token,txt[i]))
 	tokenizer = Tokenizer()
 	tokenizer.fit_on_texts(sentences)
 	sequences = tokenizer.texts_to_sequences(sentences)
 	label_index=tokenizer.texts_to_sequences(labels)
 	return sequences,label_index
 
-
-
 def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations):
 	#top_words = 10000
 	labels=np.array(labels)
 	label_array=labels.flatten()
-
+        
 	label2index=list(set(label_array))
 	#print(label2index)
 	prediction_labels=[]
@@ -58,7 +56,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 		else:
 			prediction_labels.append(1)
 	#print(prediction_labels)
-
+        
 	prediction_labels=np.array(prediction_labels)
 	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.3)
 	#max_review_length = 500
@@ -107,14 +105,13 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 	test_auc=roc_auc_score(y_test,probs[:,1])
 
 	return test_acc,test_F_1,test_Recall,test_Precision,test_auc
-	
 
 f=open("GRU_classifer_performance.txt","w+")
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 
 
 txt_flu,labels_flu=handle_flu_json("../data/flu.json.gz")
-sequences,labels=tokenize_words(txt_flu,labels_flu)
+sequences,labels =tokenize_words(txt_flu,labels_flu)
 test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,10000,3)
 
 f.write("flu | flu_relevant | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
