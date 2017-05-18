@@ -1,2 +1,5 @@
 Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
-flu | flu_relevant | GRU_classifier | None | test | 0.741596638822 | 0.755103285976 | 0.707397959184 | 0.730472572574 | 0.815612852284
+flu | flu_relevant | GRU_classifier | None | test | 0.742296918768 | 0.736800568071 | 0.741317901179 | 0.739052331829 | 0.813432384546
+flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.79 | 0.395 | 0.5 | 0.441340782123 | 0.662447257384
+flu-risk | label_about_flu | GRU_classifer | None | test | 0.924683327628 | 0.781096563011 | 0.712296118436 | 0.745111526082 | 0.868658359855
+flu-risk | label_about_flushot | GRU_classifer | None | test | 0.987114276026 | 0.984849984577 | 0.954149408459 | 0.969256652251 | 0.988047366367
