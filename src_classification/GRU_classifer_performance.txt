@@ -1,5 +1,12 @@
 Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
-flu | flu_relevant | GRU_classifier | None | test | 0.742296918768 | 0.736800568071 | 0.741317901179 | 0.739052331829 | 0.813432384546
-flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.79 | 0.395 | 0.5 | 0.441340782123 | 0.662447257384
-flu-risk | label_about_flu | GRU_classifer | None | test | 0.924683327628 | 0.781096563011 | 0.712296118436 | 0.745111526082 | 0.868658359855
-flu-risk | label_about_flushot | GRU_classifer | None | test | 0.987114276026 | 0.984849984577 | 0.954149408459 | 0.969256652251 | 0.988047366367
+flu | flu_relevant | GRU_classifier | None | test | 0.730392157197 | 0.726573333045 | 0.732760571576 | 0.72965383608 | 0.801465715117
+flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.71 | 0.355 | 0.5 | 0.415204678363 | 0.69742593492
+flu-risk | label_about_flu | GRU_classifer | None | test | 0.914755220815 | 0.743013334577 | 0.72066120251 | 0.731666596104 | 0.854539399225
+flu-risk | label_about_flushot | GRU_classifer | None | test | 0.990505256019 | 0.98037749356 | 0.975877854862 | 0.978122499338 | 0.990515980473
+flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | 0.867203924275 | 0.8530208962 | 0.8563803959 | 0.854697344824 | 0.932831342709
+flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | 0.976666666508 | 0.903993055556 | 0.830777832531 | 0.865840436308 | 0.949581374853
+health.json | health-sick | GRU_classifer | None | test | 0.781885396861 | 0.75775862069 | 0.702787884591 | 0.729238783071 | 0.800922379676
+trust-in-government | label_trust_gov| GRU_classifer | None | test | 0.951884058351 | 0.849642414312 | 0.79426974144 | 0.821023505874 | 0.921160027952
+trust-in-government | label_about_gov| GRU_classifer | None | test | 0.889177168317 | 0.872864836193 | 0.864935665554 | 0.868882161413 | 0.952066070987
+trust-in-government | label_about_vaccine| GRU_classifer | None | test | 0.900931098941 | 0.900254646977 | 0.896075502043 | 0.898160213139 | 0.968886770821
+vaccine_sentiment | yes-no| GRU_classifer | None | test | 0.923684210317 | 0.924928934447 | 0.873539351815 | 0.898499938024 | 0.980224457587

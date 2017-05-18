@@ -179,162 +179,158 @@ f.write("flu-risk | label_about_flushot | GRU_classifer | None | test | {} | {} 
 
 
 
-# data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
-#     label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
+data,label_flu_vaccine_intent_to_receive,label_flu_vaccine_received,\
+    label_flu_vaccine_relevant,label_flu_vaccine_sentiment=handle_flu_vaccine_new("../data/flu_vaccine.json.gz")
 
-# txt=[]
-# prediction_labels_intend=[]
-# for i in range(len(label_flu_vaccine_intent_to_receive)):
-#     if label_flu_vaccine_intent_to_receive[i]=='yes':
-#         prediction_labels_intend.append("yes")
-#         txt.append(data[i])
-#     elif label_flu_vaccine_intent_to_receive[i]=='no':
-#         prediction_labels_intend.append("no")
-#         txt.append(data[i])
+txt=[]
+prediction_labels_intend=[]
+for i in range(len(label_flu_vaccine_intent_to_receive)):
+    if label_flu_vaccine_intent_to_receive[i]=='yes':
+        prediction_labels_intend.append(1)
+        txt.append(data[i])
+    elif label_flu_vaccine_intent_to_receive[i]=='no':
+        prediction_labels_intend.append(0)
+        txt.append(data[i])
 
-# print(len(txt))
+sequences=tokenize_words(txt,prediction_labels_intend)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_intend,40,19000,3)
 
-# sequences,labels=tokenize_words(txt,prediction_labels_intend)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
-
-# f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
-# txt=[]
-# prediction_labels_flu_vaccine_relevant=[]
-# for i in range(len(label_flu_vaccine_relevant)):
-#     if label_flu_vaccine_relevant[i]=='yes':
-#         prediction_labels_flu_vaccine_relevant.append("yes")
-#         txt.append(data[i])
-#     elif label_flu_vaccine_relevant[i]=='no':
-#         prediction_labels_flu_vaccine_relevant.append("no")
-#         txt.append(data[i])
+txt=[]
+prediction_labels_flu_vaccine_relevant=[]
+for i in range(len(label_flu_vaccine_relevant)):
+    if label_flu_vaccine_relevant[i]=='yes':
+        prediction_labels_flu_vaccine_relevant.append(1)
+        txt.append(data[i])
+    elif label_flu_vaccine_relevant[i]=='no':
+        prediction_labels_flu_vaccine_relevant.append(0)
+        txt.append(data[i])
 
 
 # print(len(txt))
 
-# sequences,labels=tokenize_words(txt,prediction_labels_flu_vaccine_relevant)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
+sequences=tokenize_words(txt,prediction_labels_flu_vaccine_relevant)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_flu_vaccine_relevant,\
+	40,19000,3)
 
-# f.write("flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
-
-
-
-# data,labels=handle_health_json("../data/health.json.gz")
-
-# txt=[]
-# prediction_labels=[]
-# for i in range(len(labels)):
-#     if labels[i]=='health':
-#         prediction_labels.append("health")
-#         txt.append(data[i])
-#     elif labels[i]=='sick':
-#         prediction_labels.append("sick")
-#         txt.append(data[i])
-
-
-# print(len(txt))
-
-# sequences,labels=tokenize_words(txt,prediction_labels)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
-
-# f.write("health.json | health-sick | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+f.write("flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
 
-# data,label_about_gov,label_about_vaccine,label_trust_gov=\
-# handle_trust_in_gov('../data/trust-in-government.json.gz')
+data,labels=handle_health_json("../data/health.json.gz")
+
+txt=[]
+prediction_labels=[]
+for i in range(len(labels)):
+    if labels[i]=='health':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif labels[i]=='sick':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+
+print(len(txt))
+
+sequences=tokenize_words(txt,prediction_labels)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,3)
+
+f.write("health.json | health-sick | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
 
-# txt=[]
-# prediction_labels=[]
-# for i in range(len(label_trust_gov)):
-#     if label_trust_gov[i]=='yes_trust':
-#         prediction_labels.append("yes")
-#         txt.append(data[i])
-#     elif label_trust_gov[i]=='neither_trust':
-#         prediction_labels.append("neither")
-#         txt.append(data[i])
-
-# txt=np.array(txt)
-# prediction_labels=np.array(prediction_labels)
-
-# print(len(txt))
-
-# sequences,labels=tokenize_words(txt,prediction_labels)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
-
-# f.write("trust-in-government | label_trust_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
-
-
-# txt=[]
-# prediction_labels=[]
-# for i in range(len(label_about_gov)):
-#     if label_about_gov[i]=='yes':
-#         prediction_labels.append("yes")
-#         txt.append(data[i])
-#     elif label_about_gov[i]=='no':
-#         prediction_labels.append("no")
-#         txt.append(data[i])
-
-# print(len(txt))
-
-# sequences,labels=tokenize_words(txt,prediction_labels)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
-
-# f.write("trust-in-government | label_about_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+data,label_about_gov,label_about_vaccine,label_trust_gov=\
+handle_trust_in_gov('../data/trust-in-government.json.gz')
 
 
 
-# txt=[]
-# prediction_labels=[]
-# for i in range(len(label_about_vaccine)):
-#     if label_about_vaccine[i]=='yes':
-#         prediction_labels.append("yes")
-#         txt.append(data[i])
-#     elif label_about_vaccine[i]=='no':
-#         prediction_labels.append("no")
-#         txt.append(data[i])
+txt=[]
+prediction_labels=[]
+for i in range(len(label_trust_gov)):
+    if label_trust_gov[i]=='yes_trust':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_trust_gov[i]=='neither_trust':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+txt=np.array(txt)
+prediction_labels=np.array(prediction_labels)
+sequences=tokenize_words(txt,prediction_labels)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,3)
+
+f.write("trust-in-government | label_trust_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_about_gov)):
+    if label_about_gov[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_about_gov[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+print(len(txt))
+
+sequences=tokenize_words(txt,prediction_labels)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,3)
+
+f.write("trust-in-government | label_about_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
 
-# print(len(txt))
-
-# sequences,labels=tokenize_words(txt,prediction_labels)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
-
-# f.write("trust-in-government | label_about_vaccine| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
-
-
-
-# data,label_relevant=handle_vaccine_sentiment("../data/vaccine_sentiment.json.gz")
-
-# txt=[]
-# prediction_labels=[]
-# for i in range(len(label_relevant)):
-#     if label_relevant[i]=='yes':
-#         prediction_labels.append("yes")
-#         txt.append(data[i])
-#     elif label_relevant[i]=='no':
-#         prediction_labels.append("no")
-#         txt.append(data[i])
+txt=[]
+prediction_labels=[]
+for i in range(len(label_about_vaccine)):
+    if label_about_vaccine[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_about_vaccine[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
 
 
 
-# print(len(txt))
+print(len(txt))
 
-# sequences,labels=tokenize_words(txt,prediction_labels)
-# test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,labels,40,19000,3)
+sequences=tokenize_words(txt,prediction_labels)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,3)
 
-# f.write("vaccine_sentiment | yes-no| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
-#     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+f.write("trust-in-government | label_about_vaccine| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
+
+
+data,label_relevant=handle_vaccine_sentiment("../data/vaccine_sentiment.json.gz")
+
+txt=[]
+prediction_labels=[]
+for i in range(len(label_relevant)):
+    if label_relevant[i]=='yes':
+        prediction_labels.append(1)
+        txt.append(data[i])
+    elif label_relevant[i]=='no':
+        prediction_labels.append(0)
+        txt.append(data[i])
+
+
+
+print(len(txt))
+
+sequences=tokenize_words(txt,prediction_labels)
+test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,3)
+
+f.write("vaccine_sentiment | yes-no| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
 
 
