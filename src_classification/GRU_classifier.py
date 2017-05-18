@@ -42,22 +42,8 @@ def tokenize_words(txt,labels):
 	return sequences,label_index
 
 def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations):
-	#top_words = 10000
-	labels=np.array(labels)
-	label_array=labels.flatten()
         
-	label2index=list(set(label_array))
-	#print(label2index)
-	prediction_labels=[]
-	
-	for i in range(len(labels)):
-		if labels[i]==label2index[0]:
-			prediction_labels.append(0)
-		else:
-			prediction_labels.append(1)
-	#print(prediction_labels)
-        
-	prediction_labels=np.array(prediction_labels)
+	prediction_labels=np.array(labels)
 	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.3)
 	#max_review_length = 500
 	X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
