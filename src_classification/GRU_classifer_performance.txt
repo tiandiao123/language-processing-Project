@@ -1,2 +1,2 @@
 Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
-flu | flu_relevant | GRU_classifier | None | test | 0.778011204649 | 0.773103875645 | 0.772264120668 | 0.772683769994 | 0.856054436778
+flu | flu_relevant | GRU_classifier | None | test | 0.741596638822 | 0.755103285976 | 0.707397959184 | 0.730472572574 | 0.815612852284
