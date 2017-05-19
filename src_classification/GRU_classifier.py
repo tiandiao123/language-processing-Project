@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 import keras
 from keras.datasets import imdb
 from keras.models import Sequential
@@ -38,13 +39,60 @@ def tokenize_words(txt,labels):
 	tokenizer = Tokenizer()
 	tokenizer.fit_on_texts(sentences)
 	sequences = tokenizer.texts_to_sequences(sentences)
-	#label_index=tokenizer.texts_to_sequences(labels)
 	return sequences
 
-def cross_validation_model_selection():
-	pass
+def cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,labels,max_review_length,\
+	top_words,num_iterations):
+	kf = KFold(n_splits=4)
+	oprimal_para=l2_parameters[0]
+	lowest_accuracy=sys.maxint
 
-def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations):
+	for l2_val in l2_parameters:
+		loss_list=[]
+		for train_index, test_index in kf.split(X):
+			X_train, X_test = X[train_index], X[test_index]
+			y_train, y_test = y[train_index], y[test_index]
+
+			X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
+			X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
+			X_train=np.array(X_train)
+			X_test=np.array(X_test)
+			y_train_c = keras.utils.to_categorical(y_train, 2)
+			y_test_c = keras.utils.to_categorical(y_test, 2)
+
+
+			embedding_vecor_length = 32
+			model = Sequential()
+			model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
+			#model.add(Dropout(0.2))
+			model.add(GRU(50,kernel_regularizer=keras.regularizers.l2(0.01),bias_regularizer=keras.regularizers.l2(0.01)))
+			model.add(Dropout(0.3))
+			model.add(Dense(10,activation='relu'))
+			model.add(Dense(2, activation='softmax'))
+			model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+			print(model.summary()),
+			model.fit(X_train, y_train_c, validation_data=(X_test, y_test_c), epochs=num_iterations, batch_size=64)
+			scores = model.evaluate(X_test, y_test_c, verbose=0)
+			test_acc=scores[1]
+			loss_list.append(test_acc)
+		
+		loss_list=np.array(loss_list)
+		average_loss=np.mean(loss_list)
+		if lowest_accuracy>average_loss:
+			lowest_accuracy=average_loss
+			oprimal_para=l2_val
+
+	return GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para)
+
+
+
+
+
+
+
+
+
+def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para):
         
 	prediction_labels=np.array(labels)
 	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.25)
@@ -68,7 +116,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 	model = Sequential()
 	model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
 	#model.add(Dropout(0.2))
-	model.add(GRU(50,kernel_regularizer=keras.regularizers.l2(0.01),bias_regularizer=keras.regularizers.l2(0.01)))
+	model.add(GRU(50,bias_regularizer=keras.regularizers.l2(oprimal_para)))
 	model.add(Dropout(0.3))
 	model.add(Dense(10,activation='relu'))
 	model.add(Dense(2, activation='softmax'))
