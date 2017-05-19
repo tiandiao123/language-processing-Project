@@ -35,6 +35,21 @@ dense_10 (Dense)             (None, 2)                 62
 
 ```
 
+Also, here is one of training result of one of data sets:
+```
+Train on 4311 samples, validate on 1438 samples
+Epoch 1/5
+4311/4311 [==============================] - 5s - loss: 0.7086 - acc: 0.9188 - val_loss: 0.4077 - val_acc: 0.9249
+Epoch 2/5
+4311/4311 [==============================] - 4s - loss: 0.3151 - acc: 0.9267 - val_loss: 0.2484 - val_acc: 0.9249
+Epoch 3/5
+4311/4311 [==============================] - 4s - loss: 0.1736 - acc: 0.9413 - val_loss: 0.1884 - val_acc: 0.9444
+Epoch 4/5
+4311/4311 [==============================] - 4s - loss: 0.0977 - acc: 0.9712 - val_loss: 0.1721 - val_acc: 0.9590
+Epoch 5/5
+4311/4311 [==============================] - 4s - loss: 0.0657 - acc: 0.9833 - val_loss: 0.1686 - val_acc: 0.9597
+```
+
 
 ### TODO (The following contents were added by Dr. Adrian):
 
