@@ -14,7 +14,7 @@ from process_data import handle_flu_json,handle_flu_risk_perception,handle_flu_v
 from process_data import handle_health_json,handle_trust_in_gov,handle_vaccine_sentiment,handle_zika_conspiracy
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
-from Tokenizer_text import tokenize_words
+#from Tokenizer_text import tokenize_words
 import time
 #import Tokenizer_text
 from sklearn.metrics import recall_score
