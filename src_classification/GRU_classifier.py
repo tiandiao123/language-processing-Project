@@ -23,7 +23,6 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import KFold
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import GridSearchCV, cross_val_score
-import nltk
 
 
 
