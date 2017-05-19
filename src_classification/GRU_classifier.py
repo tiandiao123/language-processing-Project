@@ -45,10 +45,20 @@ def cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],seq
 	top_words,num_iterations):
 	kf = KFold(n_splits=4)
 	oprimal_para=l2_parameters[0]
-	lowest_accuracy=sys.maxint
+
+	dev_accuracy=sys.maxint
+	dev_precision=0
+	dev_recall=0
+	dev_F_1=0
+	dev_auc=0
 
 	for l2_val in l2_parameters:
-		loss_list=[]
+		loss_list=np.array([])
+		recall_list=np.array([])
+		precision_list=np.array([])
+		auc_list=np.array([])
+		F1_list=np.array([])
+
 		for train_index, test_index in kf.split(X):
 			X_train, X_test = X[train_index], X[test_index]
 			y_train, y_test = y[train_index], y[test_index]
@@ -75,14 +85,39 @@ def cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],seq
 			scores = model.evaluate(X_test, y_test_c, verbose=0)
 			test_acc=scores[1]
 			loss_list.append(test_acc)
-		
-		loss_list=np.array(loss_list)
-		average_loss=np.mean(loss_list)
-		if lowest_accuracy>average_loss:
-			lowest_accuracy=average_loss
-			oprimal_para=l2_val
 
-	return GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para)
+			probs = model.predict(x=X_test)
+			predics=[]
+			for ele in probs:
+			 	if ele[1]>=0.5:
+			 		predics.append(1)
+			 	else:
+			 		predics.append(0)
+
+
+			test_Recall=recall_score(y_test, predics, average='macro')
+			recall_list.append(test_Recall) 
+			test_Precision= precision_score(y_test, predics, average='macro')
+			precision_list.append(test_Precision)
+			test_F_1=2*(test_Recall*test_Precision)/(test_Precision+test_Recall)
+			F1_list.append(test_F_1)
+			test_auc=roc_auc_score(y_test,probs[:,1])
+			auc_list.append(test_auc)
+
+		average_loss=np.mean(loss_list)
+		if dev_accuracy>average_loss:
+
+			dev_accuracy=average_loss
+			oprimal_para=l2_val
+			dev_precision=np.mean(precision_list)
+			dev_recall=np.mean(recall_list)
+			dev_auc=np.mean(auc_list)
+			dev_F_1=np.mean(F1_list)
+
+	test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para)
+
+	return dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc
 
 
 
@@ -145,6 +180,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 
 	return test_acc,test_F_1,test_Recall,test_Precision,test_auc
 
+
 f=open("GRU_classifer_performance.txt","w+")
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
 
@@ -159,10 +195,15 @@ for ele in labels_flu:
     else:
         prediction_labels_flu.append(0)
 
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_flu,40,10000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_flu,40,10000,5)
+
+f.write("flu | flu_relevant | GRU_classifier | None | dev | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 
 f.write("flu | flu_relevant | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
+
 
 
 
@@ -182,9 +223,13 @@ for i in range(len(label_about_flu_likelihood)):
         txt_about_flu.append(train_data[i])
 
 sequences=tokenize_words(txt_about_flu,prediction_labels_about_flu_likelihood)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_about_flu_likelihood\
-	,40,10000,5)
 
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_about_flu_likelihood,\
+	40,10000,5)
+
+f.write("flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -201,8 +246,12 @@ for i in range(len(label_about_flu)):
         txt_about_flu.append(train_data[i])
 
 sequences=tokenize_words(txt_about_flu,prediction_labels_about_flu)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_about_flu,40,18000,5)
 
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_about_flu,40,18000,5)
+
+f.write("flu-risk | label_about_flu | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("flu-risk | label_about_flu | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -220,9 +269,11 @@ for i in range(len(label_about_fluShot)):
         txt_about_flu.append(train_data[i])
 
 sequences=tokenize_words(txt_about_flu,prediction_labels_about_flushot)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_about_flushot,\
-	40,18000,3)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_about_flushot,40,18000,5)
 
+f.write("flu-risk | label_about_flushot | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("flu-risk | label_about_flushot | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -244,8 +295,11 @@ for i in range(len(label_flu_vaccine_intent_to_receive)):
         txt.append(data[i])
 
 sequences=tokenize_words(txt,prediction_labels_intend)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_intend,40,19000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_intend,40,19000,5)
 
+f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -264,9 +318,14 @@ for i in range(len(label_flu_vaccine_relevant)):
 # print(len(txt))
 
 sequences=tokenize_words(txt,prediction_labels_flu_vaccine_relevant)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels_flu_vaccine_relevant,\
+
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_flu_vaccine_relevant,\
 	40,19000,5)
 
+
+f.write("flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -288,8 +347,11 @@ for i in range(len(labels)):
 print(len(txt))
 
 sequences=tokenize_words(txt,prediction_labels)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels,40,19000,5)
 
+f.write("health.json | health-sick | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("health.json | health-sick | GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -313,8 +375,13 @@ for i in range(len(label_trust_gov)):
 txt=np.array(txt)
 prediction_labels=np.array(prediction_labels)
 sequences=tokenize_words(txt,prediction_labels)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,5)
 
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels,40,19000,5)
+
+
+f.write("trust-in-government | label_trust_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("trust-in-government | label_trust_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -332,8 +399,12 @@ for i in range(len(label_about_gov)):
 print(len(txt))
 
 sequences=tokenize_words(txt,prediction_labels)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels,40,19000,5)
 
+
+f.write("trust-in-government | label_about_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("trust-in-government | label_about_gov| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -354,8 +425,11 @@ for i in range(len(label_about_vaccine)):
 print(len(txt))
 
 sequences=tokenize_words(txt,prediction_labels)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels,40,19000,5)
 
+f.write("trust-in-government | label_about_vaccine| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
 f.write("trust-in-government | label_about_vaccine| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
@@ -378,14 +452,12 @@ for i in range(len(label_relevant)):
 print(len(txt))
 
 sequences=tokenize_words(txt,prediction_labels)
-test_acc,test_F_1,test_Recall,test_Precision,test_auc=GRU_train_prediction(sequences,prediction_labels,40,19000,5)
+dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
+cross_validation_model_selection(l2_parameters=[0.0001,0.001,0.01,0.1,1],sequences,prediction_labels,40,19000,5)
 
-f.write("vaccine_sentiment | yes-no| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+
+f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
+    .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
+f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
-
-
-
-
-
-
 
