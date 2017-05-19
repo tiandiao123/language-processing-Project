@@ -41,6 +41,9 @@ def tokenize_words(txt,labels):
 	#label_index=tokenizer.texts_to_sequences(labels)
 	return sequences
 
+def cross_validation_model_selection():
+	pass
+
 def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations):
         
 	prediction_labels=np.array(labels)
