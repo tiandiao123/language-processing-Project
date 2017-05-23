@@ -1,3 +1,23 @@
 Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC
-flu | flu_relevant | GRU_classifier | None | dev | 0.77678571416 | 0.776479713902 | 0.768561857196 | 0.772395855378 | 0.854456269027
-flu | flu_relevant | GRU_classifier | None | test | 0.767857142857 | 0.763043557136 | 0.7614746523 | 0.762258297426 | 0.837937019588
+flu | flu_relevant | GRU_classifier | None | dev | 0.762605041942 | 0.76265389341 | 0.766496193618 | 0.764551889728 | 0.846436654497
+flu | flu_relevant | GRU_classifier | None | test | 0.774789915866 | 0.771148814354 | 0.759659624994 | 0.765361104719 | 0.84988693939
+flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.752314136575 | 0.376157067294 | 0.5 | 0.429149154479 | 0.60596971921
+flu-risk | label_about_flu_likelihood | GRU_classifier | None | test | 0.771084343813 | 0.385542168675 | 0.5 | 0.43537414966 | 0.734375
+flu-risk | label_about_flu | GRU_classifer | None | test | 0.918652423993 | 0.754177340357 | 0.721022163613 | 0.736296743587 | 0.852685383581
+flu-risk | label_about_flu | GRU_classifer | None | test | 0.912489728841 | 0.725628640956 | 0.652641195288 | 0.687202362143 | 0.831272384112
+flu-risk | label_about_flushot | GRU_classifer | None | test | 0.974462421621 | 0.969453604595 | 0.912221541253 | 0.938916576538 | 0.985789845465
+flu-risk | label_about_flushot | GRU_classifer | None | test | 0.989829129373 | 0.981509518462 | 0.968125583851 | 0.974771611866 | 0.988131270054
+flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | 0.848944462881 | 0.825441670109 | 0.842109472015 | 0.833550193274 | 0.920441630625
+flu-vaccine | label_flu_vaccine_intent_to_receive | GRU_classifer | None | test | 0.856662463345 | 0.836027137276 | 0.847753306072 | 0.841849390034 | 0.923210655953
+flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | 0.9775 | 0.934756176523 | 0.796250547651 | 0.856782182561 | 0.936882613407
+flu-vaccine | prediction_labels_flu_vaccine_relevant | GRU_classifer | None | test | 0.9808 | 0.911626101401 | 0.846861924686 | 0.878051397989 | 0.961424496006
+health.json | health-sick | GRU_classifer | None | test | 0.79565779752 | 0.785274422128 | 0.744125492054 | 0.763306669267 | 0.837642500257
+health.json | health-sick | GRU_classifer | None | test | 0.838137472416 | 0.832968144278 | 0.773312119535 | 0.802032342261 | 0.848390518355
+trust-in-government | label_trust_gov| GRU_classifer | None | test | 0.961035125669 | 0.86036306973 | 0.857431616554 | 0.858696158321 | 0.943920086155
+trust-in-government | label_trust_gov| GRU_classifer | None | test | 0.979137690658 | 0.936214703599 | 0.905397778016 | 0.920548400759 | 0.984060300789
+trust-in-government | label_about_gov| GRU_classifer | None | test | 0.898145023741 | 0.899695767644 | 0.864046894664 | 0.881256927485 | 0.959403675542
+trust-in-government | label_about_gov| GRU_classifer | None | test | 0.900400177857 | 0.895292001551 | 0.873726166995 | 0.88437763135 | 0.961674379204
+trust-in-government | label_about_vaccine| GRU_classifer | None | test | 0.919982118963 | 0.919919361702 | 0.916627322733 | 0.918255148064 | 0.977246444943
+trust-in-government | label_about_vaccine| GRU_classifer | None | test | 0.911935628366 | 0.915669538199 | 0.9074058824 | 0.911518981506 | 0.979431782401
+vaccine_sentiment | label_relavant| GRU_classifer | None | test | 0.888596306518 | 0.788179617736 | 0.81104768261 | 0.79704872721 | 0.858163153779
+vaccine_sentiment | label_relavant| GRU_classifer | None | test | 0.947368420676 | 0.938309897987 | 0.927409598064 | 0.93282790601 | 0.982647757315
