@@ -55,7 +55,7 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 	sequences=np.array(sequences)
 	labels=np.array(labels)
 
-	X_dev_sequence, X_test_sequence, y_dev_labels, y_test_labes = train_test_split(sequences, labels,\
+	X_dev_sequences, X_test_sequences, y_dev_labels, y_test_labes = train_test_split(sequences, labels,\
 	 test_size=0.2, random_state=42)
 
 	for l2_val in l2_parameters:
@@ -472,10 +472,4 @@ f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | 
 f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
-''''''
-
-
-
-
-
-
+'''
