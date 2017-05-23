@@ -54,15 +54,18 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 	sequences=np.array(sequences)
 	labels=np.array(labels)
 
+	X_dev_sequence, X_test_sequence, y_dev_labels, y_test_labes = train_test_split(sequences, labels,\
+	 test_size=0.2, random_state=42)
+
 	for l2_val in l2_parameters:
 		loss_list=[]
 		recall_list=[]
 		precision_list=[]
 		auc_list=[]
 		F1_list=[]
-
 		fold=0
 		print("testing parameters {}".format(str(l2_val)))
+
 		for train_index, test_index in kf.split(sequences):
 			fold+=1
 			print("evaluating fold {}".format(str(fold)))
