@@ -217,7 +217,7 @@ f.write("flu | flu_relevant | GRU_classifier | None | test | {} | {} | {} | {} |
 
 
 
-'''
+
 train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
 handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
 
@@ -472,4 +472,4 @@ f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | 
 f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
-'''
+
