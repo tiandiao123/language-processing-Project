@@ -51,6 +51,7 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 	dev_recall=0
 	dev_F_1=0
 	dev_auc=0
+
 	sequences=np.array(sequences)
 	labels=np.array(labels)
 
@@ -66,11 +67,11 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 		fold=0
 		print("testing parameters {}".format(str(l2_val)))
 
-		for train_index, test_index in kf.split(sequences):
+		for train_index, test_index in kf.split(X_dev_sequences):
 			fold+=1
 			print("evaluating fold {}".format(str(fold)))
-			X_train, X_test = sequences[train_index], sequences[test_index]
-			y_train, y_test = labels[train_index], labels[test_index]
+			X_train, X_test = X_dev_sequences[train_index], X_dev_sequences[test_index]
+			y_train, y_test = y_dev_labels[train_index], y_dev_labels[test_index]
 
 			X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
 			X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
@@ -140,7 +141,7 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para):
         
 	prediction_labels=np.array(labels)
-	X_train,X_test,y_train,y_test=train_test_split(sequences,prediction_labels,test_size=0.25)
+	X_train,X_test,y_train,y_test = train_test_split(sequences, prediction_labels,test_size=0.2, random_state=42)
 	#max_review_length = 500
 	X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
 	X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
@@ -216,7 +217,7 @@ f.write("flu | flu_relevant | GRU_classifier | None | test | {} | {} | {} | {} |
 
 
 
-
+'''
 train_data,label_about_flu,label_about_fluShot,label_about_flu_likelihood,label_about_flu_severity=\
 handle_flu_risk_perception("../data/flu-risk-perception.json.gz")
 
@@ -471,6 +472,7 @@ f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | 
 f.write("vaccine_sentiment | label_relavant| GRU_classifer | None | test | {} | {} | {} | {} | {}\n"\
     .format(str(test_acc),str(test_Precision),str(test_Recall),str(test_F_1),str(test_auc)))
 
+''''''
 
 
 
