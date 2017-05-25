@@ -30,6 +30,8 @@ vocabulary_size=8000
 unknown_token = "UNKNOWN_TOKEN"
 sentence_start_token="SENTENCE_START_TOKEN"
 
+outfile=open("GRU_classifer_F1.txt","w+")
+
 
 
 def tokenize_words(txt,labels):
@@ -115,6 +117,7 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 			auc_list.append(test_auc)
 
 		average_loss=mean(loss_list)
+		outfile.write("the L2 {}'s average F1 is {}".format(str(l2_val),str(mean(F1_list))))
 		if dev_accuracy>average_loss:
 
 			dev_accuracy=average_loss
@@ -127,14 +130,9 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 	print("model has been selected, begin apply it in testing data")
 	test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
 	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,optimal_para)
+	outfile.write("\n")
 
 	return dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc
-
-
-
-
-
-
 
 
 
@@ -190,7 +188,6 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 	test_auc=roc_auc_score(y_test,probs[:,1])
 
 	return test_acc,test_F_1,test_Recall,test_Precision,test_auc
-
 
 f=open("GRU_classifer_performance.txt","w+")
 f.write("Dataset | Task | Model | FeatureSet | EvaluationSet | Accuracy | Precision | Recall | F1 Score | AUC\n")
