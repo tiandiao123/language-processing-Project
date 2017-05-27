@@ -43,7 +43,7 @@ def tokenize_words(txt,labels):
 	sequences = tokenizer.texts_to_sequences(sentences)
 	return sequences
 
-units_array=[40,60.80.100]
+units_array=[40,60,80,100]
 def cross_validation_model_selection(units,l2_parameter,sequences,labels,max_review_length,\
 	top_words,num_iterations):
 	kf = KFold(n_splits=4)
