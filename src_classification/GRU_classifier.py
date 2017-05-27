@@ -130,7 +130,7 @@ def cross_validation_model_selection(units,l2_parameter,sequences,labels,max_rev
 
 	print("model has been selected, begin apply it in testing data")
 	test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
-	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,optimal_para,optimal_unit)
+	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,0.1,optimal_unit)
 	outfile.write("\n")
 
 	return dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc
