@@ -43,10 +43,11 @@ def tokenize_words(txt,labels):
 	sequences = tokenizer.texts_to_sequences(sentences)
 	return sequences
 
-def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_length,\
+units_array=[40,60.80.100]
+def cross_validation_model_selection(units,l2_parameter,sequences,labels,max_review_length,\
 	top_words,num_iterations):
 	kf = KFold(n_splits=4)
-	optimal_para=l2_parameters[0]
+	optimal_unit=units[0]
 
 	dev_accuracy=sys.maxsize
 	dev_precision=0
@@ -60,14 +61,14 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 	X_dev_sequences, X_test_sequences, y_dev_labels, y_test_labes = train_test_split(sequences, labels,\
 	 test_size=0.2, random_state=42)
 
-	for l2_val in l2_parameters:
+	for unit in units:
 		loss_list=[]
 		recall_list=[]
 		precision_list=[]
 		auc_list=[]
 		F1_list=[]
 		fold=0
-		print("testing parameters {}".format(str(l2_val)))
+		print("unit {}".format(str(unit)))
 
 		for train_index, test_index in kf.split(X_dev_sequences):
 			fold+=1
@@ -87,7 +88,8 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 			model = Sequential()
 			model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
 			#model.add(Dropout(0.2))
-			model.add(GRU(50,kernel_regularizer=keras.regularizers.l2(0.01),bias_regularizer=keras.regularizers.l2(0.01)))
+			model.add(GRU(unit,kernel_regularizer=keras.regularizers.l2(l2_parameter),\
+				bias_regularizer=keras.regularizers.l2(l2_parameter)))
 			model.add(Dropout(0.3))
 			model.add(Dense(10,activation='relu'))
 			model.add(Dense(2, activation='softmax'))
@@ -117,11 +119,11 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 			auc_list.append(test_auc)
 
 		average_loss=mean(loss_list)
-		outfile.write("the L2 {}'s average F1 is {}".format(str(l2_val),str(mean(F1_list))))
+		outfile.write("the unit {}'s average F1 is {} ".format(str(unit),str(mean(F1_list))))
 		if dev_accuracy>average_loss:
 
 			dev_accuracy=average_loss
-			optimal_para=l2_val
+			optimal_unit=unit
 			dev_precision=mean(precision_list)
 			dev_recall=mean(recall_list)
 			dev_auc=mean(auc_list)
@@ -129,14 +131,14 @@ def cross_validation_model_selection(l2_parameters,sequences,labels,max_review_l
 
 	print("model has been selected, begin apply it in testing data")
 	test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
-	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,optimal_para)
+	GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,optimal_para,optimal_unit)
 	outfile.write("\n")
 
 	return dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc
 
 
 
-def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para):
+def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterations,oprimal_para,unit):
         
 	prediction_labels=np.array(labels)
 	X_train,X_test,y_train,y_test = train_test_split(sequences, prediction_labels,test_size=0.2, random_state=42)
@@ -160,7 +162,7 @@ def GRU_train_prediction(sequences,labels,max_review_length,top_words,num_iterat
 	model = Sequential()
 	model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
 	#model.add(Dropout(0.2))
-	model.add(GRU(50,bias_regularizer=keras.regularizers.l2(oprimal_para)))
+	model.add(GRU(unit,bias_regularizer=keras.regularizers.l2(oprimal_para)))
 	model.add(Dropout(0.3))
 	model.add(Dense(10,activation='relu'))
 	model.add(Dense(2, activation='softmax'))
@@ -204,7 +206,7 @@ for ele in labels_flu:
         prediction_labels_flu.append(0)
 
 dev_accuracy,dev_F_1,dev_recall,dev_precision,dev_auc,test_acc,test_F_1,test_Recall,test_Precision,test_auc=\
-cross_validation_model_selection([0.0001,0.001,0.01,0.1,1],sequences,prediction_labels_flu,40,10000,3)
+cross_validation_model_selection(units=units_array,0.1,sequences,prediction_labels_flu,40,10000,3)
 
 f.write("flu | flu_relevant | GRU_classifier | None | dev | {} | {} | {} | {} | {}\n"\
     .format(str(dev_accuracy),str(dev_precision),str(dev_recall),str(dev_F_1),str(dev_auc)))
