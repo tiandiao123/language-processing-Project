@@ -1,0 +1,11 @@
+the unit 40's average F1 is 0.761528810392 the unit 60's average F1 is 0.778794917546 the unit 80's average F1 is 0.767173437594 the unit 100's average F1 is 0.77099100903 
+the unit 40's average F1 is 0.425821808431 the unit 60's average F1 is 0.425821808431 the unit 80's average F1 is 0.425821808431 the unit 100's average F1 is 0.425821808431 
+the unit 40's average F1 is 0.73259258963 the unit 60's average F1 is 0.726228545292 the unit 80's average F1 is 0.737456730219 the unit 100's average F1 is 0.723361411676 
+the unit 40's average F1 is 0.86112253186 the unit 60's average F1 is 0.901227924849 the unit 80's average F1 is 0.901553975357 the unit 100's average F1 is 0.895926863145 
+the unit 40's average F1 is 0.841158840443 the unit 60's average F1 is 0.840856906885 the unit 80's average F1 is 0.843882549212 the unit 100's average F1 is 0.831122033341 
+the unit 40's average F1 is 0.87742471647 the unit 60's average F1 is 0.876038178384 the unit 80's average F1 is 0.878530526591 the unit 100's average F1 is 0.875794847112 
+the unit 40's average F1 is 0.405639536395 the unit 60's average F1 is 0.405639536395 the unit 80's average F1 is 0.405639536395 the unit 100's average F1 is 0.405639536395 
+the unit 40's average F1 is 0.48092545499 the unit 60's average F1 is 0.554174775325 the unit 80's average F1 is 0.508647984799 the unit 100's average F1 is 0.536509315335 
+the unit 40's average F1 is 0.756552225021 the unit 60's average F1 is 0.770151307195 the unit 80's average F1 is 0.758877735193 the unit 100's average F1 is 0.763100040944 
+the unit 40's average F1 is 0.872672603547 the unit 60's average F1 is 0.866981019506 the unit 80's average F1 is 0.876264445625 the unit 100's average F1 is 0.85816361711 
+the unit 40's average F1 is 0.708201267115 the unit 60's average F1 is 0.769443300721 the unit 80's average F1 is 0.874528095716 the unit 100's average F1 is 0.860916000017 
